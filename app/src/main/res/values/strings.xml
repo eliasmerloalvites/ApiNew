@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">ESE</string>
+    <string name="crearaqui">, Crear Aqui</string>
+    <string name="notengocuenta">No tienes cuenta</string>
+    <string name="txtUser">Nombre Usuario</string>
+    <string name="txtPass">Contraseña</string>
+    <string name="btnLogin">Iniciar</string>
+    <string name="olvidastecontraseña">¿Olvidates tu contraseña?</string>
+    <string name="title_activity_menu_principal">MenuPrincipal</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Nombre de Usuario</string>
+    <string name="nav_header_subtitle">correo_electronico@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="btnFacebook">Iniciar con Facebook</string>
+    <string name="btnGoogle">Iniciar con Google</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_send">Send</string>
+    <string name="title_perfil">Perfil</string>
+    <string name="title_inicio">Inicio</string>
+    <string name="title_favoritos">Favoritos</string>
+
+    <string name="facebook_app_id">2534124263569184</string>
+    <string name="fb_login_protocol_scheme">fb2534124263569184</string>
+
+    <string name="cancel_login">Se canceló la operación</string>
+    <string name="error_login">Ocurrió un error al ingresar</string>
+    <string name="menu_salir">Salir</string>
+    <string name="not_log_in">No se pudo iniciar Session</string>
+    <string name="not_close_session">No se pudo cerrar session</string>
+    <string name="not_revoke">No se pudo revocar el acceso</string>
+    <string name="title_busqueda">Buscar</string>
+    <string name="title_mensaje">Mensaje</string>
+    <string name="btnAcepto">Acepto</string>
+</resources>

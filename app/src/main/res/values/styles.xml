@@ -1,0 +1,64 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="RaiseButtonDark" parent="Theme.AppCompat.Light">
+        <item name="colorButtonNormal">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
+        <item name="android:textColor">@color/edtColorWhite</item>
+    </style>
+
+    <style name="EdiTexWhite" parent="Theme.AppCompat">
+        <item name="android:textColorHint">@color/edtColorWhite</item>
+        <item name="android:textSize">@dimen/edtTextsizeLogin</item>
+        <item name="android:textColorPrimary">@color/edtColorWhite</item>
+        <item name="colorAccent">@color/edtColorWhite</item>
+        <item name="colorControlNormal">@color/edtColorWhite</item>
+        <item name="colorControlActivated">@color/edtColorWhite</item>
+
+    </style>
+
+    <style name="EdiTexBlack" parent="Theme.AppCompat">
+        <item name="android:textColorHint">@color/edtColorBlack</item>
+        <item name="android:textSize">@dimen/edtTextsizeLogin</item>
+        <item name="android:textColorPrimary">@color/edtColorBlack</item>
+        <item name="colorAccent">@color/edtColorBlack</item>
+        <item name="colorControlNormal">@color/edtColorBlack</item>
+        <item name="colorControlActivated">@color/edtColorBlack</item>
+
+    </style>
+
+    <style name="EdiTexPlomo" parent="Theme.AppCompat">
+        <item name="android:textColorHint">@color/colorTextSecu</item>
+        <item name="android:textSize">@dimen/edtTextsizeLogin</item>
+        <item name="android:textColorPrimary">@color/colorTextSecu</item>
+        <item name="colorAccent">@color/colorTextSecu</item>
+        <item name="colorControlNormal">@color/colorTextSecu</item>
+        <item name="colorControlActivated">@color/colorTextSecu</item>
+
+    </style>
+
+    <style name="AppTheme.Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>
