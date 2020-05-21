@@ -41,7 +41,9 @@ public class Validacion extends AppCompatActivity implements  GoogleApiClient.On
         if (modo.equals("apinew"))
         {
             regresaLoginApinew();
-            goMainScreen();
+            Intent intent = new Intent(this, Home.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
 
         }
         else if (modo.equals("facebook"))
@@ -69,7 +71,7 @@ public class Validacion extends AppCompatActivity implements  GoogleApiClient.On
 
     }
     private void  goMainScreen() {
-        Intent intent = new Intent(this, Home.class);
+        Intent intent = new Intent(this, ValidandoNumero.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

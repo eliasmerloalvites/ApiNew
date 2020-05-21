@@ -2,6 +2,8 @@ package cfsuman.android.chaskii.com.apinew.ui.home;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,8 +12,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.SearchView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -41,6 +43,7 @@ public class Home extends AppCompatActivity implements BottomNavigationView.OnNa
     RecyclerView recycler1,recycler2;
     SQLusuario sqLusuario;
     AdaptadorFamilia adaptador;
+    Toolbar toolbar;
 
     private BottomNavigationView navView;
 
@@ -48,6 +51,11 @@ public class Home extends AppCompatActivity implements BottomNavigationView.OnNa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        toolbar = findViewById(R.id.toolbar);
+
+        this.setSupportActionBar(toolbar);
+        this.getSupportActionBar().setTitle("");
 
         listaFamilia=new ArrayList<>();
         recycler1= findViewById(R.id.recicleHome1);
@@ -59,19 +67,6 @@ public class Home extends AppCompatActivity implements BottomNavigationView.OnNa
         navView.setOnNavigationItemSelectedListener(this); //asignamos una funcion a cumplir si se selecciona
         ListarFamilia();
 
-        SearchView simpleSearchView = findViewById(R.id.search_familia); // inititate a search view
-        simpleSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                String text = newText;
-                adaptador.filter(text);
-                return false;
-            }
-        });
     }
 
     @Override
@@ -137,16 +132,54 @@ public class Home extends AppCompatActivity implements BottomNavigationView.OnNa
                     {
                         listaFamilia.add(new MFamilia(array.getJSONObject(it).getString("FAG_Id"),array.getJSONObject(it).getString("FAG_Nombre"),array.getJSONObject(it).getString("FAG_Descripcion")));
                     }
-                            AdaptadorFamilia adaptadorFamilia = new AdaptadorFamilia(listaFamilia ,getApplicationContext());
-                            recycler1.setAdapter(adaptadorFamilia);
+                            adaptador = new AdaptadorFamilia(listaFamilia ,getApplicationContext());
+                            recycler1.setAdapter(adaptador);
                 }
                 catch (Exception e){
 
                     e.printStackTrace();
 
                 }
-
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.search_view);
+
+        androidx.appcompat.widget.SearchView searchView = (SearchView) menuItem.getActionView();
+
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(adaptador != null) {
+                        adaptador.getFilter().filter(newText);
+                }
+                return false;
+            }
+        });
+            return  true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.search_view){
+            return  true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }

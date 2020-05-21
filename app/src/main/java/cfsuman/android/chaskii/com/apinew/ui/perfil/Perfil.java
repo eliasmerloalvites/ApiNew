@@ -135,6 +135,11 @@ public class Perfil extends AppCompatActivity implements BottomNavigationView.On
         GoogleSignInClient googleSignInClient= GoogleSignIn.getClient(this,gso);
         googleSignInClient.signOut();
 
+        SharedPreferences preferences = getSharedPreferences("preferencialogin", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("session",false);
+        editor.commit();
+
         regresarLogin();
     }
 

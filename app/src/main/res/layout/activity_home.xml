@@ -16,13 +16,17 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <SearchView
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:id="@+id/search_familia"
-                android:background="@drawable/formato_botton"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/formato_botton"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="?attr/actionBarTheme"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recicleHome1"
@@ -34,10 +38,6 @@
                 android:layout_gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="SE VE"></Button>
         </LinearLayout>
     </ScrollView>
     <LinearLayout
