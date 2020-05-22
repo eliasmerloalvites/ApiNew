@@ -47,6 +47,4 @@ dependencies {
     //libreria para celular numero
     implementation 'com.hbb20:ccp:2.3.9'
     ////Login Validacion del numero celular
-    implementation "com.google.android.gms:play-services-auth:17.0.0"
-    implementation "com.google.android.gms:play-services-auth-api-phone:17.1.0"
 }

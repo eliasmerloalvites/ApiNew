@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private SignInButton signInButton;          //para el inicio de session con google
     private GoogleApiClient googleApiClient;    //para el inicio de session con google
     private Button Button,Buttonface,ButtonGoo ;          //botones para el inicio de session con AppNew,facebook y google
-    private String provider,provider_id,foto,name,email;
+
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
