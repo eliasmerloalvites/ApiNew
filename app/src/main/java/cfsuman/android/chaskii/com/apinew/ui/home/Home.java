@@ -1,28 +1,47 @@
 package cfsuman.android.chaskii.com.apinew.ui.home;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.speech.tts.Voice;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import cfsuman.android.chaskii.com.apinew.R;
 import cfsuman.android.chaskii.com.apinew.SQLite.SQLusuario;
@@ -39,11 +58,17 @@ import okhttp3.Response;
 
 public class Home extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
+    private static final int REQ_CODE_SPEECH_INPUT = 100;
     ArrayList<MFamilia> listaFamilia;
     RecyclerView recycler1,recycler2;
     SQLusuario sqLusuario;
     AdaptadorFamilia adaptador;
+    TextView icobuscador,btnDerecha,btnIzquierda;
+    EditText edtbuscador;
+    LinearLayout linlay;
+    Byte EstadoBuscado = 0; //0 = escrito y 1 audio
     Toolbar toolbar;
+    RecyclerView.LayoutManager mlayoutmanager;
 
     private BottomNavigationView navView;
 
@@ -52,21 +77,79 @@ public class Home extends AppCompatActivity implements BottomNavigationView.OnNa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        toolbar = findViewById(R.id.toolbar);
+        /*toolbar = findViewById(R.id.toolbar);
 
         this.setSupportActionBar(toolbar);
-        this.getSupportActionBar().setTitle("");
+        this.getSupportActionBar().setTitle("Bienvenido, Juan Pérez");*/
 
-        listaFamilia=new ArrayList<>();
-        recycler1= findViewById(R.id.recicleHome1);
-        recycler2= findViewById(R.id.recicleHome2);
+        listaFamilia = new ArrayList<>();
+        btnDerecha = findViewById(R.id.txtDerecho);
+        btnIzquierda = findViewById(R.id.txtIzquierda);
+        linlay = findViewById(R.id.lilaBuscador);
+        icobuscador = findViewById(R.id.icoBuscador);
+        edtbuscador = findViewById(R.id.edtBuscador);
+        recycler1 = findViewById(R.id.recicleHome1);
+       // recycler2= findViewById(R.id.recicleHome2);
         recycler1.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
-        recycler2.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
+       // recycler2.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
         adaptador = (AdaptadorFamilia) recycler1.getAdapter();
         navView = findViewById(R.id.nav_viewB); //Instanciamos BotonBar del formulario con nuestra Variable navView
         navView.setOnNavigationItemSelectedListener(this); //asignamos una funcion a cumplir si se selecciona
         ListarFamilia();
+        icobuscador.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (EstadoBuscado == 0 ) {
+                    linlay.setBackgroundResource(R.drawable.formato_buscador);
+                    edtbuscador.requestFocus();
+                    edtbuscador.setHint("Buscar ...");
+                    edtbuscador.setHintTextColor(Color.rgb(182, 182, 182));
+                    EstadoBuscado = 1;
+                    Drawable drawable = getResources().getDrawable(R.drawable.ic_micro).mutate();
+                    drawable.setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
 
+                    icobuscador.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+
+                    Toast.makeText(getApplicationContext(), "HOLA NO PASO NADA", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Intent inten = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    inten.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                    inten.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                    inten.putExtra(RecognizerIntent.EXTRA_PROMPT,"HOLA COMO PUEDO AYUDARTE MI AMO");
+                    try {
+                        startActivityForResult(inten,REQ_CODE_SPEECH_INPUT);
+                    }catch (ActivityNotFoundException e)
+                    {
+                        System.out.println(e);
+                    }
+                }
+            }
+        });
+        edtbuscador.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                if(adaptador != null) {
+                    adaptador.getFilter().filter(s);
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+        btnDerecha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recycler1.scrollBy(150, 0);
+            }
+        });
+        btnIzquierda.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recycler1.scrollBy(-150, 0);
+            }
+        });
     }
 
     @Override
@@ -84,10 +167,8 @@ public class Home extends AppCompatActivity implements BottomNavigationView.OnNa
         }
         else if (id == R.id.navigation_busqueda) {
 
-
         }
         else if (id == R.id.navigation_notificaciones) {
-
 
         }
         else if (id == R.id.navigation_perfil) {
@@ -99,6 +180,22 @@ public class Home extends AppCompatActivity implements BottomNavigationView.OnNa
 
         }
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode)
+        {
+            case REQ_CODE_SPEECH_INPUT :{
+                if (resultCode==RESULT_OK && data!=null)
+                {
+                    ArrayList<String> result  = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    edtbuscador.setText(result.get(0));
+                }
+                break;
+            }
+        }
     }
 
     private void ListarFamilia() {
@@ -130,21 +227,19 @@ public class Home extends AppCompatActivity implements BottomNavigationView.OnNa
                     JSONArray array = json.getJSONArray("success");
                     for (int it = 0 ; it<array.length();it++)
                     {
-                        listaFamilia.add(new MFamilia(array.getJSONObject(it).getString("FAG_Id"),array.getJSONObject(it).getString("FAG_Nombre"),array.getJSONObject(it).getString("FAG_Descripcion")));
+                        listaFamilia.add(new MFamilia(array.getJSONObject(it).getString("SER_Id"),array.getJSONObject(it).getString("SER_Nombre"),array.getJSONObject(it).getString("SER_Descripcion"),array.getJSONObject(it).getString("SER_Imagen")));
                     }
                             adaptador = new AdaptadorFamilia(listaFamilia ,getApplicationContext());
                             recycler1.setAdapter(adaptador);
                 }
                 catch (Exception e){
-
                     e.printStackTrace();
-
                 }
             }
         });
     }
 
-    @Override
+/*    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
 
@@ -178,8 +273,7 @@ public class Home extends AppCompatActivity implements BottomNavigationView.OnNa
         if(id == R.id.search_view){
             return  true;
         }
-
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
 }

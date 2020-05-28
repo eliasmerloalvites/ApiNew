@@ -2,6 +2,7 @@ package cfsuman.android.chaskii.com.apinew.adaptador;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -25,6 +30,7 @@ import java.util.Locale;
 import cfsuman.android.chaskii.com.apinew.R;
 import cfsuman.android.chaskii.com.apinew.modelo.MFamilia;
 import cfsuman.android.chaskii.com.apinew.ui.categoria.categoria;
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 
 public class AdaptadorFamilia extends  RecyclerView.Adapter<AdaptadorFamilia.ViewHolderfamiliaes> implements Filterable {
@@ -55,9 +61,19 @@ public class AdaptadorFamilia extends  RecyclerView.Adapter<AdaptadorFamilia.Vie
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onBindViewHolder(@NonNull ViewHolderfamiliaes holder, int i) {
-        holder.tipo.setText(listafamilia.get(i).getNombre());
-        holder.descripcion.setText(listafamilia.get(i).getDescripcion());
-        holder.precio.setText(listafamilia.get(i).getId());
+        final int radius = 10;
+        final int margin = 0;
+        final Transformation transformation = new RoundedCornersTransformation(radius,margin, RoundedCornersTransformation.CornerType.TOP);
+
+        holder.tipo.setText(listafamilia.get(i).getNombre().toUpperCase());
+        Picasso.get()
+                .load(Uri.parse("http://subdominio.maprocorp.com/images/servicio/"+listafamilia.get(i).getImagen()))
+                .resize(100, 80)
+                .centerCrop()
+                .transform(transformation)
+                .error(R.drawable.apple_logo) //en caso que la url no sea válida muestro otra imagen
+                .into(holder.imagen);
+      //  holder.descripcion.setText(listafamilia.get(i).getDescripcion());
     }
 
     @Override
@@ -102,7 +118,7 @@ public class AdaptadorFamilia extends  RecyclerView.Adapter<AdaptadorFamilia.Vie
 
     public class ViewHolderfamiliaes extends RecyclerView.ViewHolder {
         TextView tipo,descripcion, precio, precioxnoche,num;
-      //  ImageView imagen;
+        ImageView imagen;
 
 
       //  String a1,a2,a3;
@@ -113,14 +129,12 @@ public class AdaptadorFamilia extends  RecyclerView.Adapter<AdaptadorFamilia.Vie
         public ViewHolderfamiliaes(@NonNull View itemView) {
             super(itemView);
 
-            tipo=(TextView) itemView.findViewById(R.id.txtTipo);
-            descripcion=(TextView) itemView.findViewById(R.id.txtDesc);
-            precio=(TextView) itemView.findViewById(R.id.txtPrecio);
-            precioxnoche=(TextView) itemView.findViewById(R.id.txtPreNoche);
-            num=(TextView) itemView.findViewById(R.id.txtnum);
-            next =(Button) itemView.findViewById(R.id.nextCategoria);
+            tipo= itemView.findViewById(R.id.txtNombre);
+            imagen= itemView.findViewById(R.id.image_habitacion);
+           // descripcion=(TextView) itemView.findViewById(R.id.txtDescripcion);
 
-            next.setOnClickListener(new View.OnClickListener() {
+
+            /*next.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
@@ -132,7 +146,7 @@ public class AdaptadorFamilia extends  RecyclerView.Adapter<AdaptadorFamilia.Vie
                             ft = ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction();
                             ft.replace(R.id.nav_host_fragment, fragment).addToBackStack(null);
                             ft.commit();
-                            break;/*
+                            break;*//*
                         case R.id.idComputadora :fragment = Productos.newInstance("COMPUTADORA","");
                             ft = getActivity().getSupportFragmentManager().beginTransaction();
                             ft.replace(R.id.nav_host_fragment, fragment).addToBackStack(null);
@@ -142,11 +156,11 @@ public class AdaptadorFamilia extends  RecyclerView.Adapter<AdaptadorFamilia.Vie
                             ft = getActivity().getSupportFragmentManager().beginTransaction();
                             ft.replace(R.id.nav_host_fragment, fragment).addToBackStack(null);
                             ft.commit();
-                            break;*/
+                            break;*//*
                     }
 
                 }
-            });
+            });*/
 
 
 

@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:text="Ingresa tu Nº de móvil"
+            android:text="Ingresa tu Nº de celular"
             android:textSize="24dp"
             android:textStyle="bold"
             android:textColor="@color/colorTextSecu"/>
@@ -53,8 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:text="Lo usaremos para ____________________________
-            _______________________________________________"
+            android:text="Lo usaremos para validar que el numero sea valido y usted sea el propietario de este celular"
             android:textSize="12dp"
             android:textStyle="italic"
             android:textColor="@color/colorTextSecu"/>
@@ -74,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:text="NUMERO DE MOVIL"
+            android:text="NUMERO DE CELULAR"
             android:textSize="14dp"
             android:textStyle="bold"
             android:textColor="@color/colorTextSecu"/>
@@ -132,7 +131,7 @@
                 android:background="@drawable/formato_bottonplomo"
                 android:textColor="@color/colorAccent"
                 android:textAllCaps="false"
-                android:text="Rebicir Código"/>
+                android:text="Recibir Código"/>
         </LinearLayout>
         </ScrollView>
     </LinearLayout>

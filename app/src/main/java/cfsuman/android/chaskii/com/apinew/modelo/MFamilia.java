@@ -4,6 +4,15 @@ public class MFamilia {
     private String Id;
     private String Nombre;
     private String Descripcion;
+    private String Imagen;
+
+    public String getImagen() {
+        return Imagen;
+    }
+
+    public void setImagen(String imagen) {
+        Imagen = imagen;
+    }
 
     public  MFamilia(){};
 
@@ -31,10 +40,11 @@ public class MFamilia {
         Descripcion = descripcion;
     }
 
-    public MFamilia(String id, String nombre, String descripcion) {
+    public MFamilia(String id, String nombre, String descripcion, String imagen) {
         Id = id;
         Nombre = nombre;
         Descripcion = descripcion;
+        Imagen = imagen;
     }
 
 

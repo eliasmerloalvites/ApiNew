@@ -8,4 +8,11 @@
     app:showAsAction="always"
     app:actionViewClass="androidx.appcompat.widget.SearchView"
     />
+   <!-- <item
+        android:title="Search Voz"
+        android:id="@+id/search_voz"
+        android:icon="@drawable/microfono"
+        app:showAsAction="always"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        />-->
 </menu>
