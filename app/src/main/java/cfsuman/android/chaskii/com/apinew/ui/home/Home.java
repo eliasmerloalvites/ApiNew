@@ -17,6 +17,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.Voice;
@@ -29,6 +30,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +49,11 @@ import cfsuman.android.chaskii.com.apinew.R;
 import cfsuman.android.chaskii.com.apinew.SQLite.SQLusuario;
 import cfsuman.android.chaskii.com.apinew.adaptador.AdaptadorFamilia;
 import cfsuman.android.chaskii.com.apinew.modelo.MFamilia;
+import cfsuman.android.chaskii.com.apinew.modelo.MoAlquiler;
+import cfsuman.android.chaskii.com.apinew.modelo.MoFrelancer;
+import cfsuman.android.chaskii.com.apinew.modelo.MoPromocion;
+import cfsuman.android.chaskii.com.apinew.modelo.MoServicio;
+import cfsuman.android.chaskii.com.apinew.ui.categoria.ACategoria;
 import cfsuman.android.chaskii.com.apinew.ui.perfil.Perfil;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -59,10 +66,13 @@ import okhttp3.Response;
 public class Home extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
     private static final int REQ_CODE_SPEECH_INPUT = 100;
-    ArrayList<MFamilia> listaFamilia;
-    RecyclerView recycler1,recycler2;
+    ArrayList<MoPromocion> listaFPromocion;
+    ArrayList<MoServicio> listaFServicio;
+    ArrayList<MoFrelancer> listaFFrelancer;
+    ArrayList<MoAlquiler> listaFAlquiler;
+    RecyclerView recycler0,recycler1,recycler2,recycler3;
     SQLusuario sqLusuario;
-    AdaptadorFamilia adaptador;
+    AdaptadorFamilia adaptadorPromocion,adaptadorServicio,adaptadorFrelancer,adaptadorAlquiler;
     TextView icobuscador,btnDerecha,btnIzquierda;
     EditText edtbuscador;
     LinearLayout linlay;
@@ -82,17 +92,27 @@ public class Home extends AppCompatActivity implements BottomNavigationView.OnNa
         this.setSupportActionBar(toolbar);
         this.getSupportActionBar().setTitle("Bienvenido, Juan Pérez");*/
 
-        listaFamilia = new ArrayList<>();
-        btnDerecha = findViewById(R.id.txtDerecho);
-        btnIzquierda = findViewById(R.id.txtIzquierda);
+        listaFPromocion = new ArrayList<>();
+        listaFServicio = new ArrayList<>();
+        listaFFrelancer = new ArrayList<>();
+        listaFAlquiler = new ArrayList<>();
+        btnDerecha = findViewById(R.id.txtDerechoServicio);
+        btnIzquierda = findViewById(R.id.txtIzquierdaServicio);
         linlay = findViewById(R.id.lilaBuscador);
         icobuscador = findViewById(R.id.icoBuscador);
         edtbuscador = findViewById(R.id.edtBuscador);
-        recycler1 = findViewById(R.id.recicleHome1);
-       // recycler2= findViewById(R.id.recicleHome2);
+        recycler0 = findViewById(R.id.recicleHomePromocion);
+        recycler1 = findViewById(R.id.recicleHomeServicio);
+        recycler2= findViewById(R.id.recicleHomeFrelancer);
+        recycler3= findViewById(R.id.recicleHomeAlquiler);
+        recycler0.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
         recycler1.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
-       // recycler2.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
-        adaptador = (AdaptadorFamilia) recycler1.getAdapter();
+        recycler2.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
+        recycler3.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
+        adaptadorPromocion = (AdaptadorFamilia) recycler0.getAdapter();
+        adaptadorServicio = (AdaptadorFamilia) recycler1.getAdapter();
+        adaptadorFrelancer = (AdaptadorFamilia) recycler2.getAdapter();
+        adaptadorAlquiler = (AdaptadorFamilia) recycler3.getAdapter();
         navView = findViewById(R.id.nav_viewB); //Instanciamos BotonBar del formulario con nuestra Variable navView
         navView.setOnNavigationItemSelectedListener(this); //asignamos una funcion a cumplir si se selecciona
         ListarFamilia();
@@ -129,8 +149,17 @@ public class Home extends AppCompatActivity implements BottomNavigationView.OnNa
         edtbuscador.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
-                if(adaptador != null) {
-                    adaptador.getFilter().filter(s);
+                if(adaptadorPromocion != null) {
+                    adaptadorPromocion.getFilterPr().filter(s);
+                }
+                if(adaptadorServicio != null) {
+                    adaptadorServicio.getFilter().filter(s);
+                }
+                if(adaptadorFrelancer != null) {
+                    adaptadorFrelancer.getFilterFr().filter(s);
+                }
+                if(adaptadorAlquiler != null) {
+                    adaptadorAlquiler.getFilterAl().filter(s);
                 }
             }
 
@@ -151,7 +180,11 @@ public class Home extends AppCompatActivity implements BottomNavigationView.OnNa
             }
         });
     }
-
+    public void categoriaAct(View view)
+    {
+        Intent intent = new Intent(this, ACategoria.class);
+        startActivity(intent);
+    }
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -165,9 +198,7 @@ public class Home extends AppCompatActivity implements BottomNavigationView.OnNa
         else if (id == R.id.navigation_Mensaje) {
 
         }
-        else if (id == R.id.navigation_busqueda) {
 
-        }
         else if (id == R.id.navigation_notificaciones) {
 
         }
@@ -224,13 +255,35 @@ public class Home extends AppCompatActivity implements BottomNavigationView.OnNa
                 System.out.println(myresponse);
                 try {
                     JSONObject json = new JSONObject(myresponse);
-                    JSONArray array = json.getJSONArray("success");
-                    for (int it = 0 ; it<array.length();it++)
+
+                    JSONArray array0 = json.getJSONArray("promocion");
+                    for (int it = 0 ; it<array0.length();it++)
                     {
-                        listaFamilia.add(new MFamilia(array.getJSONObject(it).getString("SER_Id"),array.getJSONObject(it).getString("SER_Nombre"),array.getJSONObject(it).getString("SER_Descripcion"),array.getJSONObject(it).getString("SER_Imagen")));
+                        listaFPromocion.add(new MoPromocion(array0.getJSONObject(it).getString("SER_Id"),array0.getJSONObject(it).getString("SER_Nombre"),array0.getJSONObject(it).getString("SER_Descripcion"),array0.getJSONObject(it).getString("SER_Imagen"),array0.getJSONObject(it).getString("SER_CostoHora")));
                     }
-                            adaptador = new AdaptadorFamilia(listaFamilia ,getApplicationContext());
-                            recycler1.setAdapter(adaptador);
+                    JSONArray array1 = json.getJSONArray("servicio");
+                    for (int it = 0 ; it<array1.length();it++)
+                    {
+                        listaFServicio.add(new MoServicio(array1.getJSONObject(it).getString("SER_Id"),array1.getJSONObject(it).getString("SER_Nombre"),array1.getJSONObject(it).getString("SER_Descripcion"),array1.getJSONObject(it).getString("SER_Imagen"),array1.getJSONObject(it).getString("SER_CostoHora")));
+                    }
+                    JSONArray array2 = json.getJSONArray("delivery");
+                    for (int it = 0 ; it<array2.length();it++)
+                    {
+                        listaFFrelancer.add(new MoFrelancer(array2.getJSONObject(it).getString("SER_Id"),array2.getJSONObject(it).getString("SER_Nombre"),array2.getJSONObject(it).getString("SER_Descripcion"),array2.getJSONObject(it).getString("SER_Imagen"),array2.getJSONObject(it).getString("SER_CostoHora")));
+                    }
+                    JSONArray array3 = json.getJSONArray("alquiler");
+                    for (int it = 0 ; it<array3.length();it++)
+                    {
+                        listaFAlquiler.add(new MoAlquiler(array3.getJSONObject(it).getString("SER_Id"),array3.getJSONObject(it).getString("SER_Nombre"),array3.getJSONObject(it).getString("SER_Descripcion"),array3.getJSONObject(it).getString("SER_Imagen"),array3.getJSONObject(it).getString("SER_CostoHora")));
+                    }
+                            adaptadorPromocion = new AdaptadorFamilia(listaFPromocion ,listaFServicio ,listaFFrelancer,listaFAlquiler,getApplicationContext(),0);
+                            adaptadorServicio = new AdaptadorFamilia(listaFPromocion ,listaFServicio ,listaFFrelancer,listaFAlquiler,getApplicationContext(),1);
+                            adaptadorFrelancer = new AdaptadorFamilia(listaFPromocion ,listaFServicio ,listaFFrelancer,listaFAlquiler,getApplicationContext(),2);
+                            adaptadorAlquiler = new AdaptadorFamilia(listaFPromocion ,listaFServicio ,listaFFrelancer,listaFAlquiler,getApplicationContext(),3);
+                            recycler0.setAdapter(adaptadorPromocion);
+                            recycler1.setAdapter(adaptadorServicio);
+                            recycler2.setAdapter(adaptadorFrelancer);
+                            recycler3.setAdapter(adaptadorAlquiler);
                 }
                 catch (Exception e){
                     e.printStackTrace();

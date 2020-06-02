@@ -14,6 +14,11 @@
         <item name="android:textColor">@color/edtColorWhite</item>
     </style>
 
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/edtAmarillo</item>
+        <item name="colorControlActivated">@color/edtAmarillo</item>
+    </style>
+
     <style name="EdiTexWhite" parent="Theme.AppCompat">
         <item name="android:textColorHint">@color/edtColorWhite</item>
         <item name="android:textSize">@dimen/edtTextsizeLogin</item>

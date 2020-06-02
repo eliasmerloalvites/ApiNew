@@ -48,9 +48,9 @@ public class categoria extends Fragment {
         recycler2=(RecyclerView) getView().findViewById(R.id.recicleCategoria2);
         recycler1.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL,false));
         recycler2.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false));
-        AdaptadorCategoria adaptadorCategoria= new AdaptadorCategoria(listaCategoria,getActivity(),getContext());
-        recycler1.setAdapter(adaptadorCategoria);
-        recycler2.setAdapter(adaptadorCategoria);
+       // AdaptadorCategoria adaptadorCategoria= new AdaptadorCategoria(listaCategoria,getActivity(),getContext());
+      /*  recycler1.setAdapter(adaptadorCategoria);
+        recycler2.setAdapter(adaptadorCategoria);*/
     }
 
 }

@@ -52,7 +52,7 @@ public class Perfil extends AppCompatActivity implements BottomNavigationView.On
 
         navView = findViewById(R.id.nav_viewB); //Instanciamos BotonBar del formulario con nuestra Variable navView
         navView.setOnNavigationItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) this); //asignamos una funcion a cumplir si se selecciona
-        navView.getMenu().getItem(4).setChecked(true);
+        navView.getMenu().getItem(3).setChecked(true);
 
         edtNombre = findViewById(R.id.txtNombreUsuario);
         edtEmail = findViewById(R.id.txtCorreoUsuario);
@@ -189,10 +189,7 @@ public class Perfil extends AppCompatActivity implements BottomNavigationView.On
         else if (id == R.id.navigation_Mensaje) {
 
         }
-        else if (id == R.id.navigation_busqueda) {
 
-
-        }
         else if (id == R.id.navigation_notificaciones) {
 
 

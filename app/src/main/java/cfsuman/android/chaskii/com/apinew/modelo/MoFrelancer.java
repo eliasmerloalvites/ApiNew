@@ -1,19 +1,17 @@
 package cfsuman.android.chaskii.com.apinew.modelo;
 
-public class MFamilia {
+public class MoFrelancer {
     private String Id;
     private String Nombre;
     private String Descripcion;
     private String Imagen;
-    private int Tipo; //1 = Servicio, 2 = Frelancer , 3 = Alquiler
+    private String Precio;
 
-    public int getTipo() {
-        return Tipo;
-    }
+    public MoFrelancer(){};
 
-    public void setTipo(int tipo) {
-        Tipo = tipo;
-    }
+    public String getPrecio() { return Precio; }
+
+    public void setPrecio(String precio) { Precio = precio; }
 
     public String getImagen() {
         return Imagen;
@@ -22,8 +20,6 @@ public class MFamilia {
     public void setImagen(String imagen) {
         Imagen = imagen;
     }
-
-    public  MFamilia(){};
 
     public String getId() {
         return Id;
@@ -49,12 +45,12 @@ public class MFamilia {
         Descripcion = descripcion;
     }
 
-    public MFamilia(String id, String nombre, String descripcion, String imagen, Integer tipo) {
+    public MoFrelancer(String id, String nombre, String descripcion, String imagen, String precio) {
         Id = id;
         Nombre = nombre;
         Descripcion = descripcion;
         Imagen = imagen;
-        Tipo = tipo;
+        Precio = precio;
     }
 
 

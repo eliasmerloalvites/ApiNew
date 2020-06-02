@@ -13,4 +13,7 @@
     <dimen name="item_width">200dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="txtSize_olvidastecontraseña">16dp</dimen>
+
+    <dimen name="rate_us_star_minheight"> <!--height of your image--> </dimen>
+    <dimen name="rate_us_star_maxheight"> <!--height of your image--> </dimen>
 </resources>
