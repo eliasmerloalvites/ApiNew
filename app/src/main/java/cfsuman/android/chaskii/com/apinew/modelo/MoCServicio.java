@@ -6,8 +6,13 @@ public class MoCServicio {
     private String Descripcion;
     private String Imagen;
     private String Precio;
+    private String IdCategoria;
 
     public MoCServicio(){};
+
+    public String getIdCategoria() { return IdCategoria; }
+
+    public void setIdCategoria(String idCategoria) {IdCategoria = idCategoria; }
 
     public String getPrecio() { return Precio; }
 
@@ -47,12 +52,13 @@ public class MoCServicio {
         Descripcion = descripcion;
     }
 
-    public MoCServicio(String id, String nombre, String descripcion, String imagen, String precio) {
+    public MoCServicio(String id, String nombre, String descripcion, String imagen, String precio, String idCategoria) {
         Id = id;
         Nombre = nombre;
         Descripcion = descripcion;
         Imagen = imagen;
         Precio = precio;
+        IdCategoria = idCategoria;
     }
 
 

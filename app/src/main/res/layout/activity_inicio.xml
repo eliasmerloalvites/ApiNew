@@ -5,7 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondoinicio"
-    tools:context=".ui.categoria.ACategoria">
+    tools:context=".ui.home.Inicio">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="60dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -18,7 +23,7 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginBottom="8dp">
                 <LinearLayout
-                    android:id="@+id/lilaBuscadorCat"
+                    android:id="@+id/lilaBuscadorFam"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginLeft="10dp"
@@ -26,33 +31,30 @@
                     android:gravity="center"
                     android:orientation="horizontal">
                     <TextView
-                        android:id="@+id/icoAtrasCat"
-                        android:layout_width="40dp"
-                        android:layout_height="120dp"
-                        android:text=""
-                        android:drawableEnd="@drawable/ic_atras"
-                        android:drawableTint="#FFF" />
+                        android:id="@+id/icoCerrarCat"
+                        android:layout_width="30dp"
+                        android:layout_height="40dp" />
                     <EditText
-                        android:id="@+id/edtBuscadorCat"
+                        android:id="@+id/edtBuscadorFam"
                         android:paddingLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:textColorHint="#fff"
+                        android:hint="Bienvenido, Juan Pérez"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_weight="1"
                         android:background="@null" />
                     <TextView
-                        android:id="@+id/icoBuscadorCat"
+                        android:id="@+id/icoBuscadorFam"
                         android:layout_width="40dp"
-                        android:layout_height="120dp"
+                        android:layout_height="40dp"
                         android:text=""
                         android:drawableEnd="@drawable/ic_search"
                         android:drawableTint="#FFF" />
                 </LinearLayout>
                 <ImageView
-                    android:id="@+id/modoListaCategoria"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="20dp"
                     android:layout_gravity="center"
@@ -62,7 +64,7 @@
             </LinearLayout>
             <androidx.recyclerview.widget.RecyclerView
 
-                android:id="@+id/recicleCategoria"
+                android:id="@+id/recicleFamilia"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
@@ -70,4 +72,37 @@
                 android:background="#00000000"/>
 
         </LinearLayout>
+    </ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.6"
+            android:gravity="bottom">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:orientation="vertical">
+                <com.google.android.material.bottomnavigation.BottomNavigationView
+                    android:id="@+id/nav_viewB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:background="@color/colorbottonbar"
+                    app:itemIconTint="@drawable/nav_item_bottom_background"
+                    app:itemTextColor="@drawable/nav_item_bottom_background"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:menu="@menu/bottom_nav_menu" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,7 @@
     <color name="edtColorBlack">#000000</color>
     <color name="backgroundtext_Card">#01BBD6</color>
     <color name="edtAmarillo">#FFC800</color>
+    <color name="edtAmarilloSec">#FFD640</color>
 
     <color name="colorbottonbar">#1BBBBB</color>
 </resources>

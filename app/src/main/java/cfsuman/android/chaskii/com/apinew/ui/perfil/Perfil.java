@@ -30,9 +30,7 @@ import java.io.UnsupportedEncodingException;
 
 import cfsuman.android.chaskii.com.apinew.MainActivity;
 import cfsuman.android.chaskii.com.apinew.R;
-import cfsuman.android.chaskii.com.apinew.ui.home.Home;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
+import cfsuman.android.chaskii.com.apinew.ui.home.Inicio;
 
 public class Perfil extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -182,7 +180,7 @@ public class Perfil extends AppCompatActivity implements BottomNavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.navigation_Inicio) {
-            Intent intent = new Intent(this, Home.class);
+            Intent intent = new Intent(this, Inicio.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }

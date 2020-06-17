@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:background="@drawable/fondoinicio"
-    tools:context=".ui.categoria.ACategoria">
+    tools:context=".ui.clase.Clases">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -18,7 +19,7 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginBottom="8dp">
                 <LinearLayout
-                    android:id="@+id/lilaBuscadorCat"
+                    android:id="@+id/lilaBuscadorCla"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginLeft="10dp"
@@ -26,14 +27,14 @@
                     android:gravity="center"
                     android:orientation="horizontal">
                     <TextView
-                        android:id="@+id/icoAtrasCat"
+                        android:id="@+id/icoAtrasCla"
                         android:layout_width="40dp"
                         android:layout_height="120dp"
                         android:text=""
                         android:drawableEnd="@drawable/ic_atras"
                         android:drawableTint="#FFF" />
                     <EditText
-                        android:id="@+id/edtBuscadorCat"
+                        android:id="@+id/edtBuscadorCla"
                         android:paddingLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_width="match_parent"
@@ -44,7 +45,7 @@
                         android:layout_weight="1"
                         android:background="@null" />
                     <TextView
-                        android:id="@+id/icoBuscadorCat"
+                        android:id="@+id/icoBuscadorCla"
                         android:layout_width="40dp"
                         android:layout_height="120dp"
                         android:text=""
@@ -52,7 +53,7 @@
                         android:drawableTint="#FFF" />
                 </LinearLayout>
                 <ImageView
-                    android:id="@+id/modoListaCategoria"
+                    android:id="@+id/modoListaClase"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="20dp"
                     android:layout_gravity="center"
@@ -60,14 +61,21 @@
                     android:layout_height="35dp"
                     app:srcCompat="@drawable/ic_menu_black_24dp"/>
             </LinearLayout>
-            <androidx.recyclerview.widget.RecyclerView
-
-                android:id="@+id/recicleCategoria"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/formato_cuadrolinearlayout">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recicleClase"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="#00000000"/>
+            </LinearLayout>
 
         </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

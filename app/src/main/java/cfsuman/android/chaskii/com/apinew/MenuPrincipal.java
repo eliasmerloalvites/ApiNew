@@ -169,7 +169,7 @@ public class MenuPrincipal extends AppCompatActivity implements  GoogleApiClient
         Fragment fragment;
 
         if (id == R.id.navigation_Inicio) {
-            Intent intent = new Intent(this, Home.class);
+            Intent intent = new Intent(this, Clases.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }

@@ -17,9 +17,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import cfsuman.android.chaskii.com.apinew.R;
-import cfsuman.android.chaskii.com.apinew.adaptador.AdaptadorClase;
 import cfsuman.android.chaskii.com.apinew.adaptador.AdaptadorServicio;
-import cfsuman.android.chaskii.com.apinew.modelo.MClase;
 import cfsuman.android.chaskii.com.apinew.modelo.MServicio;
 
 public class servicio extends Fragment {

@@ -1,4 +1,4 @@
-package cfsuman.android.chaskii.com.apinew.ui.categoria;
+package cfsuman.android.chaskii.com.apinew.ui.clase;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -35,11 +35,12 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import cfsuman.android.chaskii.com.apinew.MyApp;
+import cfsuman.android.chaskii.com.apinew.adaptador.AdaptadorClase;
 import cfsuman.android.chaskii.com.apinew.R;
-import cfsuman.android.chaskii.com.apinew.adaptador.AdaptadorCategoria;
-import cfsuman.android.chaskii.com.apinew.adaptador.AdaptadorCategoriaLista;
-import cfsuman.android.chaskii.com.apinew.modelo.MCategoria;
+import cfsuman.android.chaskii.com.apinew.adaptador.AdaptadorClaseLista;
+import cfsuman.android.chaskii.com.apinew.modelo.MClase;
 import cfsuman.android.chaskii.com.apinew.modelo.MoCServicio;
+import cfsuman.android.chaskii.com.apinew.ui.categoria.ACategoria;
 import cfsuman.android.chaskii.com.apinew.ui.home.Inicio;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -49,45 +50,43 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class ACategoria extends AppCompatActivity {
+public class Clases extends AppCompatActivity {
     private static final int REQ_CODE_SPEECH_INPUT = 101;
-    private static String  categorias = "";
-    private static String  categoriasNombre = "";
-    ArrayList<MCategoria> listaCategoria;
+    private static String  clases = "";
+    private static String  clasesNombre = "";
+    ArrayList<MClase> listaClase;
     ArrayList<MoCServicio> listaSevicio;
-    private static  AdaptadorCategoria adaptadorCategoria = null;
-    private static  AdaptadorCategoriaLista adaptadorCategorialista = null;
-    RecyclerView recyclerCategoria;
+    AdaptadorClase adaptadorClase;
+    AdaptadorClaseLista adaptadorClaselista = null;
+    RecyclerView recyclerClase;
     TextView icobuscador,icoCerrarbuscador;
-    ImageView  icoModoLista;
+    ImageView icoModoLista;
     EditText edtbuscador;
     LinearLayout linlay;
     Byte EstadoBuscado = 0,EstadoCerrar = 0, EstadoLista = 0; //0 = escrito y 1 audio
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_acategoria);
-
+        setContentView(R.layout.activity_clase);
         MyApp varGlobal = (MyApp) getApplicationContext();
-        categorias = varGlobal.getFamiliaId();
-        categoriasNombre = varGlobal.getFamiliaNombre();
 
-        listaCategoria = new ArrayList<>();
+        clases = varGlobal.getCategoriaId();
+        clasesNombre = varGlobal.getCategoriaNombre();
+
+        listaClase = new ArrayList<>();
         listaSevicio = new ArrayList<>();
-        recyclerCategoria = findViewById(R.id.recicleCategoria);
-        recyclerCategoria.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL,false));
-        adaptadorCategoria = (AdaptadorCategoria) recyclerCategoria.getAdapter();
-       // adaptadorCategorialista = (AdaptadorCategoriaLista) recyclerCategoria.getAdapter();
-        linlay = findViewById(R.id.lilaBuscadorCat);
-        icoCerrarbuscador = findViewById(R.id.icoAtrasCat);
-        icobuscador = findViewById(R.id.icoBuscadorCat);
-        icoModoLista = findViewById(R.id.modoListaCategoria);
-        edtbuscador = findViewById(R.id.edtBuscadorCat);
-        edtbuscador.setHint(categoriasNombre);
-        ListarCategoria();
+        recyclerClase = findViewById(R.id.recicleClase);
+        recyclerClase.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
+        ListarClase();
+       // adaptadorClase = (AdaptadorClase) recyclerClase.getAdapter();
+        linlay = findViewById(R.id.lilaBuscadorCla);
+        icoCerrarbuscador = findViewById(R.id.icoAtrasCla);
+        icobuscador = findViewById(R.id.icoBuscadorCla);
+        icoModoLista = findViewById(R.id.modoListaClase);
+        edtbuscador = findViewById(R.id.edtBuscadorCla);
+        edtbuscador.setHint(clasesNombre);
+        //  disableEditText(edtbuscador);
 
         icobuscador.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -126,7 +125,6 @@ public class ACategoria extends AppCompatActivity {
                 }
             }
         });
-
         icoCerrarbuscador.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -134,7 +132,7 @@ public class ACategoria extends AppCompatActivity {
                 if(EstadoCerrar == 1) {
                     linlay.setBackgroundResource(R.drawable.formato_buscador_transparente);
                     edtbuscador.setText("");
-                    edtbuscador.setHint(categoriasNombre);
+                    edtbuscador.setHint(clasesNombre);
                     edtbuscador.setTypeface(Typeface.DEFAULT_BOLD);
                     edtbuscador.setHintTextColor(getColor(R.color.edtColorWhite));
                     disableEditText(edtbuscador);
@@ -150,7 +148,8 @@ public class ACategoria extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(icobuscador.getWindowToken(), 0);
                 }
                 else{
-                    Intent intent = new Intent(getApplicationContext(),Inicio.class);
+                    Intent intent = new Intent(getApplicationContext(), ACategoria.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     finish();
                 }
@@ -163,21 +162,21 @@ public class ACategoria extends AppCompatActivity {
 
                     icoModoLista.setImageResource(R.drawable.ic_menu_cuadro);
                     EstadoLista = 1;
-                    ListarCategoria1();
+                    ListarClase1();
                 }
                 else
                 {
                     icoModoLista.setImageResource(R.drawable.ic_menu_black_24dp);
                     EstadoLista = 0;
-                    ListarCategoria();
+                    ListarClase();
                 }
             }
         });
         edtbuscador.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
-                if(adaptadorCategorialista != null) {
-                    adaptadorCategorialista.getFilter().filter(s);
+                if(adaptadorClaselista != null) {
+                    adaptadorClaselista.getFilter().filter(s);
                 }
             }
 
@@ -186,7 +185,6 @@ public class ACategoria extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -213,14 +211,16 @@ public class ACategoria extends AppCompatActivity {
         editText.setCursorVisible(false);
         editText.setBackgroundColor(Color.TRANSPARENT);
     }
-    private void ListarCategoria() {
+
+    private void ListarClase() {
         SharedPreferences preferences = getSharedPreferences("preferenciaUsuario", Context.MODE_PRIVATE);
         String token = preferences.getString("token","");
         RequestBody formBody = new FormBody.Builder() //manda parametros
-                .add("idfamilia", categorias)
+                .add("idcategoria", clases)
                 .build();
+
         Request request = new Request.Builder()
-                .url("http://subdominio.maprocorp.com/api/listaCategoria")  //url
+                .url("http://subdominio.maprocorp.com/api/listaClase")  //url
                 .post(formBody)
                 .addHeader("Authorization", "Bearer " + token)
                 .build();
@@ -235,30 +235,28 @@ public class ACategoria extends AppCompatActivity {
                 String myresponse = response.body().string();
                 System.out.println(myresponse);
                 try {
-                    listaCategoria.clear();
-                    listaSevicio.clear();
                     JSONObject json = new JSONObject(myresponse);
                     JSONObject json1 = json.getJSONObject("success");
+                    listaClase.clear();
+                    listaSevicio.clear();
 
-                    JSONArray array0 = json1.getJSONArray("categoria");
+                    JSONArray array0 = json1.getJSONArray("clase");
                     for (int it = 0 ; it<array0.length();it++)
                     {
-                        listaCategoria.add(new MCategoria(array0.getJSONObject(it).getString("CAT_Id"),array0.getJSONObject(it).getString("CAT_Nombre"),""));
-                        JSONArray array1 = json1.getJSONArray(array0.getJSONObject(it).getString("CAT_Nombre"));
+                        listaClase.add(new MClase(array0.getJSONObject(it).getString("CLA_Id"),array0.getJSONObject(it).getString("CLA_Nombre"),""));
+                        JSONArray array1 = json1.getJSONArray(array0.getJSONObject(it).getString("CLA_Nombre"));
                         for (int i = 0 ; i<array1.length();i++)
                         {
-                            listaSevicio.add(new MoCServicio(array1.getJSONObject(i).getString("SER_Id"),array1.getJSONObject(i).getString("SER_Nombre"),array1.getJSONObject(i).getString("SER_Descripcion"),array1.getJSONObject(i).getString("SER_Imagen"),array1.getJSONObject(i).getString("SER_CostoHora"),array0.getJSONObject(it).getString("CAT_Id")));
+                            listaSevicio.add(new MoCServicio(array1.getJSONObject(i).getString("SER_Id"),array1.getJSONObject(i).getString("SER_Nombre"),array1.getJSONObject(i).getString("SER_Descripcion"),array1.getJSONObject(i).getString("SER_Imagen"),array1.getJSONObject(i).getString("SER_CostoHora"),array0.getJSONObject(it).getString("CLA_Id")));
                         }
                     }
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            adaptadorCategoria = new AdaptadorCategoria(listaCategoria, listaSevicio, getApplicationContext(), edtbuscador);
-                            recyclerCategoria.setAdapter(adaptadorCategoria);
+                    adaptadorClase= new AdaptadorClase(listaClase,listaSevicio,getApplicationContext(),edtbuscador);
+                    recyclerClase.setAdapter(adaptadorClase);
                         }
                     });
-
-
 
                 }
                 catch (Exception e){
@@ -267,14 +265,16 @@ public class ACategoria extends AppCompatActivity {
             }
         });
     }
-    private void ListarCategoria1() {
+
+    private void ListarClase1() {
         SharedPreferences preferences = getSharedPreferences("preferenciaUsuario", Context.MODE_PRIVATE);
         String token = preferences.getString("token","");
         RequestBody formBody = new FormBody.Builder() //manda parametros
-                .add("idfamilia", categorias)
+                .add("idcategoria", clases)
                 .build();
+
         Request request = new Request.Builder()
-                .url("http://subdominio.maprocorp.com/api/listaCategoria")  //url
+                .url("http://subdominio.maprocorp.com/api/listaClase")  //url
                 .post(formBody)
                 .addHeader("Authorization", "Bearer " + token)
                 .build();
@@ -288,28 +288,27 @@ public class ACategoria extends AppCompatActivity {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String myresponse = response.body().string();
                 System.out.println(myresponse);
+                listaClase.clear();
+                listaSevicio.clear();
                 try {
-                    listaCategoria.clear();
-                    listaSevicio.clear();
                     JSONObject json = new JSONObject(myresponse);
                     JSONObject json1 = json.getJSONObject("success");
 
-                    JSONArray array0 = json1.getJSONArray("categoria");
+                    JSONArray array0 = json1.getJSONArray("clase");
                     for (int it = 0 ; it<array0.length();it++)
                     {
-                        listaCategoria.add(new MCategoria(array0.getJSONObject(it).getString("CAT_Id"),array0.getJSONObject(it).getString("CAT_Nombre"),""));
-                        JSONArray array1 = json1.getJSONArray(array0.getJSONObject(it).getString("CAT_Nombre"));
+                        listaClase.add(new MClase(array0.getJSONObject(it).getString("CLA_Id"),array0.getJSONObject(it).getString("CLA_Nombre"),""));
+                        JSONArray array1 = json1.getJSONArray(array0.getJSONObject(it).getString("CLA_Nombre"));
                         for (int i = 0 ; i<array1.length();i++)
                         {
-                            listaSevicio.add(new MoCServicio(array1.getJSONObject(i).getString("SER_Id"),array1.getJSONObject(i).getString("SER_Nombre"),array1.getJSONObject(i).getString("SER_Descripcion"),array1.getJSONObject(i).getString("SER_Imagen"),array1.getJSONObject(i).getString("SER_CostoHora"),array0.getJSONObject(it).getString("CAT_Id")));
+                            listaSevicio.add(new MoCServicio(array1.getJSONObject(i).getString("SER_Id"),array1.getJSONObject(i).getString("SER_Nombre"),array1.getJSONObject(i).getString("SER_Descripcion"),array1.getJSONObject(i).getString("SER_Imagen"),array1.getJSONObject(i).getString("SER_CostoHora"),array0.getJSONObject(it).getString("CLA_Id")));
                         }
                     }
-
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                        adaptadorCategorialista= new AdaptadorCategoriaLista(listaCategoria,listaSevicio,getApplicationContext(),"caetegoria");
-                        recyclerCategoria.setAdapter(adaptadorCategorialista);
+                            adaptadorClaselista= new AdaptadorClaseLista(listaClase,listaSevicio,getApplicationContext(),edtbuscador,"clase");
+                            recyclerClase.setAdapter(adaptadorClaselista);
                         }
                     });
 

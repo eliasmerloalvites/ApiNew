@@ -20,7 +20,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import cfsuman.android.chaskii.com.apinew.ui.home.Home;
+import cfsuman.android.chaskii.com.apinew.ui.home.Inicio;
 
 public class Validacion extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener {
 
@@ -41,7 +41,7 @@ public class Validacion extends AppCompatActivity implements  GoogleApiClient.On
         if (modo.equals("apinew"))
         {
             regresaLoginApinew();
-            Intent intent = new Intent(this, Home.class);
+            Intent intent = new Intent(this, Inicio.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
 

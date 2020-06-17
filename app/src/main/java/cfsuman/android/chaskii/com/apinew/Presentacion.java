@@ -10,10 +10,7 @@ import android.os.Handler;
 import android.widget.ProgressBar;
 
 import com.facebook.AccessToken;
-
-import java.io.IOException;
-
-import cfsuman.android.chaskii.com.apinew.ui.home.Home;
+import cfsuman.android.chaskii.com.apinew.ui.home.Inicio;
 
 public class Presentacion extends AppCompatActivity {
 
@@ -32,13 +29,13 @@ public class Presentacion extends AppCompatActivity {
 
                 boolean session = preferences.getBoolean("session",false);
                 if (AccessToken.getCurrentAccessToken() != null) {
-                    Intent intent = new Intent(getApplicationContext(), Home.class);
+                    Intent intent = new Intent(getApplicationContext(), Inicio.class);
                     startActivity(intent);
                     finish();
                 }
                 else if(session)
                 {
-                    Intent intent = new Intent(getApplicationContext(), Home.class);
+                    Intent intent = new Intent(getApplicationContext(), Inicio.class);
                     startActivity(intent);
                     finish();
                 }

@@ -116,7 +116,7 @@ public class AdaptadorFamilia extends  RecyclerView.Adapter<AdaptadorFamilia.Vie
             holder.precioahora.setTextColor(Color.parseColor("#EE0807"));
             Picasso.get()
                     .load(Uri.parse("http://subdominio.maprocorp.com/images/servicio/"+listapromocion.get(i).getImagen()))
-                    .resize(110, 80)
+                    .resize(110, 75)
                     .centerCrop()
                     .transform(transformation)
                     .error(R.drawable.apple_logo) //en caso que la url no sea válida muestro otra imagen
@@ -137,10 +137,9 @@ public class AdaptadorFamilia extends  RecyclerView.Adapter<AdaptadorFamilia.Vie
             holder.ratingBar.setRating(random.nextInt(3)+2);
             holder.tipo.setText(listaservicio.get(i).getNombre().toUpperCase());
             holder.precioahora.setText("S/ "+listaservicio.get(i).getPrecio());
-            holder.precioahora.setTextColor(Color.parseColor("#EE0807"));
             Picasso.get()
                     .load(Uri.parse("http://subdominio.maprocorp.com/images/servicio/"+listaservicio.get(i).getImagen()))
-                    .resize(110, 80)
+                    .resize(110, 75)
                     .centerCrop()
                     .transform(transformation)
                     .error(R.drawable.apple_logo) //en caso que la url no sea válida muestro otra imagen
@@ -156,7 +155,7 @@ public class AdaptadorFamilia extends  RecyclerView.Adapter<AdaptadorFamilia.Vie
             holder.precioahora.setText("S/ "+listafrelancer.get(i).getPrecio());
             Picasso.get()
                     .load(Uri.parse("http://subdominio.maprocorp.com/images/servicio/"+listafrelancer.get(i).getImagen()))
-                    .resize(110, 80)
+                    .resize(110, 75)
                     .centerCrop()
                     .transform(transformation)
                     .error(R.drawable.apple_logo) //en caso que la url no sea válida muestro otra imagen
@@ -172,7 +171,7 @@ public class AdaptadorFamilia extends  RecyclerView.Adapter<AdaptadorFamilia.Vie
             holder.precioahora.setText("S/ "+listaalquiler.get(i).getPrecio());
             Picasso.get()
                     .load(Uri.parse("http://subdominio.maprocorp.com/images/servicio/"+listaalquiler.get(i).getImagen()))
-                    .resize(110, 80)
+                    .resize(110, 75)
                     .centerCrop()
                     .transform(transformation)
                     .error(R.drawable.apple_logo) //en caso que la url no sea válida muestro otra imagen
@@ -201,7 +200,7 @@ public class AdaptadorFamilia extends  RecyclerView.Adapter<AdaptadorFamilia.Vie
         {
             return listaalquiler.size();
         }
-        return 0;
+        return 5;
     }
 
     @Override
@@ -353,7 +352,6 @@ public class AdaptadorFamilia extends  RecyclerView.Adapter<AdaptadorFamilia.Vie
         public ViewHolderfamiliaes(@NonNull View itemView) {
             super(itemView);
 
-            masservicios =itemView.findViewById(R.id.idMasServicio);
             ratingBar = itemView.findViewById(R.id.ratingBar);
             precioahora= itemView.findViewById(R.id.txtPrecioAhora);
             precioantes = itemView.findViewById(R.id.txtPrecioAntes);;

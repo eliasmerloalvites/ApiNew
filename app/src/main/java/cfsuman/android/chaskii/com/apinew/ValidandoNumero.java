@@ -36,10 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
-import cfsuman.android.chaskii.com.apinew.R;
-import cfsuman.android.chaskii.com.apinew.ui.home.Home;
+import cfsuman.android.chaskii.com.apinew.ui.home.Inicio;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -181,7 +178,7 @@ public class ValidandoNumero extends AppCompatActivity {
                         //si la respuesta da error, muestra un mensaje del resultado
                         Toast.makeText(getApplicationContext(), json.getString("hubo un error al registrar"), Toast.LENGTH_SHORT).show();
                     } else {
-                        Intent intent = new Intent(getApplicationContext(), Home.class);
+                        Intent intent = new Intent(getApplicationContext(), Inicio.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                     }

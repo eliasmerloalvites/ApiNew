@@ -17,9 +17,6 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import cfsuman.android.chaskii.com.apinew.R;
-import cfsuman.android.chaskii.com.apinew.adaptador.AdaptadorCategoria;
-import cfsuman.android.chaskii.com.apinew.adaptador.AdaptadorClase;
-import cfsuman.android.chaskii.com.apinew.modelo.MCategoria;
 import cfsuman.android.chaskii.com.apinew.modelo.MClase;
 
 public class clase extends Fragment {
@@ -48,9 +45,9 @@ public class clase extends Fragment {
         recycler2=(RecyclerView) getView().findViewById(R.id.recicleClase2);
         recycler1.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL,false));
         recycler2.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false));
-        AdaptadorClase adaptadorClase= new AdaptadorClase(listaClase,getActivity(),getContext());
-        recycler1.setAdapter(adaptadorClase);
-        recycler2.setAdapter(adaptadorClase);
+      //  AdaptadorClase adaptadorClase= new AdaptadorClase(listaClase,getActivity(),getContext());
+//        recycler1.setAdapter(adaptadorClase);
+//        recycler2.setAdapter(adaptadorClase);
     }
 
 }
