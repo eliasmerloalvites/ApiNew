@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -27,6 +30,11 @@ import com.iarcuschin.simpleratingbar.SimpleRatingBar;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -40,7 +48,15 @@ import cfsuman.android.chaskii.com.apinew.modelo.MoFrelancer;
 import cfsuman.android.chaskii.com.apinew.modelo.MoPromocion;
 import cfsuman.android.chaskii.com.apinew.modelo.MoServicio;
 import cfsuman.android.chaskii.com.apinew.ui.clase.Clases;
+import cfsuman.android.chaskii.com.apinew.ui.favorito.Favoritos;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 public class AdaptadorCServicio extends  RecyclerView.Adapter<AdaptadorCServicio.ViewHolderfamiliaes> implements Filterable {
@@ -78,11 +94,11 @@ public class AdaptadorCServicio extends  RecyclerView.Adapter<AdaptadorCServicio
 
             Random random = new Random();
             holder.ratingBar.setRating(random.nextInt(3)+2);
-            holder.tipo.setText(listaservicio.get(i).getNombre().toUpperCase());
+            holder.tipo.setText(listaservicio.get(i).getNombre());
             holder.precioahora.setText("S/ "+listaservicio.get(i).getPrecio());
             Picasso.get()
                     .load(Uri.parse("http://subdominio.maprocorp.com/images/servicio/"+listaservicio.get(i).getImagen()))
-                    .resize(110, 80)
+                    .resize(140, 85)
                     .centerCrop()
                     .transform(transformation)
                     .error(R.drawable.apple_logo) //en caso que la url no sea válida muestro otra imagen
@@ -91,6 +107,7 @@ public class AdaptadorCServicio extends  RecyclerView.Adapter<AdaptadorCServicio
             {
                 if  (listaservicio.get(i).getIdCategoria().equals("0"))
                 {
+                    holder.precioahora.setTypeface(null,Typeface.BOLD);
                     holder.precioahora.setTextColor(Color.parseColor("#EE0807"));
                     holder.precioantes.setTextColor(Color.parseColor("#8b8b8b"));
                     holder.precioantes.setText("S/ 322.20");
@@ -129,6 +146,24 @@ public class AdaptadorCServicio extends  RecyclerView.Adapter<AdaptadorCServicio
                     Intent intent = new Intent(context, DetalleServicio.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
+                }
+            }
+        });
+            if (listaservicio.get(i).getFavorito())
+            {
+                holder.checkFavorito.setChecked(true);
+            }
+            else
+            {
+                holder.checkFavorito.setChecked(false);
+            }
+        holder.checkFavorito.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CompoundButton) view).isChecked()){
+                    ListarFavoritos("agregar",listaservicio.get(i).getId());
+                } else {
+                    ListarFavoritos("quitar",listaservicio.get(i).getId());
                 }
             }
         });
@@ -181,11 +216,13 @@ public class AdaptadorCServicio extends  RecyclerView.Adapter<AdaptadorCServicio
         ImageView imagen;
         LinearLayout linlayaut;
         SimpleRatingBar ratingBar;
+        CheckBox checkFavorito;
 
         public ViewHolderfamiliaes(@NonNull View itemView) {
             super(itemView);
 
             ratingBar = itemView.findViewById(R.id.ratingBar);
+            checkFavorito = itemView.findViewById(R.id.like_checkbox);
             precioahora= itemView.findViewById(R.id.txtPrecioAhora);
             precioantes = itemView.findViewById(R.id.txtPrecioAntes);;
             linea = itemView.findViewById(R.id.txtLinea);
@@ -195,6 +232,42 @@ public class AdaptadorCServicio extends  RecyclerView.Adapter<AdaptadorCServicio
         }
     }
 
+    public void ListarFavoritos(String formato,String idServicio) {
+        SharedPreferences preferences = context.getSharedPreferences("preferenciaUsuario", Context.MODE_PRIVATE);
+        String token = preferences.getString("token","");
+        String idUsuario = preferences.getString("id","");
+        RequestBody formBody = new FormBody.Builder() //manda parametros
+                .add("formato",String.valueOf(formato) )
+                .add("USU_Id", idUsuario )
+                .add("SER_Id", String.valueOf(idServicio))
+                .build();
 
+        Request request = new Request.Builder()
+                .url("http://subdominio.maprocorp.com/api/listaFavoritos")  //url
+                .post(formBody)
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
+        OkHttpClient client = new OkHttpClient();   //ok
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+            }
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String myresponse = response.body().string();
+                System.out.println(myresponse);
+                try {
+                    JSONObject json = new JSONObject(myresponse);
+                    JSONObject json1 = json.getJSONObject("success");
+
+
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
 }

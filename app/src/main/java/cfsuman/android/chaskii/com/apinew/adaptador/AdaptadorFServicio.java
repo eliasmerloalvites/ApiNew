@@ -3,6 +3,7 @@ package cfsuman.android.chaskii.com.apinew.adaptador;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -67,17 +68,79 @@ public class AdaptadorFServicio extends  RecyclerView.Adapter<AdaptadorFServicio
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onBindViewHolder(@NonNull final ViewHolderfamiliaes holder, final int position) {
+        if (listafamilia.get(position).getId().equals("1"))
+        {
+            holder.logo.setBackgroundResource(R.drawable.ic_servicio);
+        }
+        else if (listafamilia.get(position).getId().equals("2"))
+        {
+            holder.logo.setBackgroundResource(R.drawable.ic_alquiler);
+        }
+        else if (listafamilia.get(position).getId().equals("3"))
+        {
+            holder.logo.setBackgroundResource(R.drawable.ic_freelancer);
+        }
+        else if (listafamilia.get(position).getId().equals("4"))
+        {
+            holder.logo.setBackgroundResource(R.drawable.ic_venta);
+        }
         holder.Familia.setText(listafamilia.get(position).getNombre());
+        holder.Familia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listafamilia.get(position).getId()!= "0")
+                {
+                    varGlobal.setFamiliaId(listafamilia.get(position).getId());
+                    varGlobal.setFamiliaNombre(listafamilia.get(position).getNombre());
+
+                    Intent intent = new Intent(context, ACategoria.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+                else
+                {
+                    varGlobal.setFamiliaId("1");
+                    varGlobal.setFamiliaNombre(listafamilia.get(position).getNombre());
+
+                    Intent intent = new Intent(context, ACategoria.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+            }
+        });
+        holder.linLay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listafamilia.get(position).getId()!= "0")
+                {
+                    varGlobal.setFamiliaId(listafamilia.get(position).getId());
+                    varGlobal.setFamiliaNombre(listafamilia.get(position).getNombre());
+
+                    Intent intent = new Intent(context, ACategoria.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+                else
+                {
+                    varGlobal.setFamiliaId("1");
+                    varGlobal.setFamiliaNombre(listafamilia.get(position).getNombre());
+
+                    Intent intent = new Intent(context, ACategoria.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+            }
+        });
         for (int i = 0; i < listaservicio.size(); i++)
         {
             if (listafamilia.get(position).getId() == listaservicio.get(i).getIdCategoria())
             {
-                holder.listaFamiliaServicio.add(new MoCServicio(listaservicio.get(i).getId(),listaservicio.get(i).getNombre(),listaservicio.get(i).getDescripcion(),listaservicio.get(i).getImagen(),listaservicio.get(i).getPrecio(),listaservicio.get(i).getIdCategoria()));
+               holder.listaFamiliaServicio.add(new MoCServicio(listaservicio.get(i).getId(),listaservicio.get(i).getNombre(),listaservicio.get(i).getDescripcion(),listaservicio.get(i).getImagen(),listaservicio.get(i).getPrecio(),listaservicio.get(i).getIdCategoria(),listaservicio.get(i).getFavorito()));
             }
         }
         if (listafamilia.get(position).getId().equals("0"))
         {
-            holder.linLay.setBackgroundResource(R.drawable.formato_cajalinearlayout);
+           // holder.linLay.setBackgroundResource(R.drawable.formato_cajalinearlayout);
             holder.Familia.setTextColor(Color.parseColor("#FFD640"));
             holder.Derecha.setHintTextColor(Color.parseColor("#FFD640"));
             holder.Izquierda.setHintTextColor(Color.parseColor("#FFD640"));
@@ -130,7 +193,7 @@ public class AdaptadorFServicio extends  RecyclerView.Adapter<AdaptadorFServicio
 
     public class ViewHolderfamiliaes extends RecyclerView.ViewHolder {
         ArrayList<MoCServicio> listaFamiliaServicio;
-        TextView Familia,Izquierda,Derecha,VerMas;
+        TextView Familia,Izquierda,Derecha,VerMas,logo;
         RecyclerView recicler;
         AdaptadorCServicio adaptadorFamilia;
         LinearLayout linLay;
@@ -140,6 +203,7 @@ public class AdaptadorFServicio extends  RecyclerView.Adapter<AdaptadorFServicio
 
             listaFamiliaServicio = new ArrayList<>();
             linLay = itemView.findViewById(R.id.LinLayMayor);
+            logo   = itemView.findViewById(R.id.txtlogo);
             Familia = itemView.findViewById(R.id.txtCategoria);
             VerMas = itemView.findViewById(R.id.idMasCategoria);
             Izquierda = itemView.findViewById(R.id.txtIzquierda);

@@ -1,10 +1,14 @@
 package cfsuman.android.chaskii.com.apinew;
 
 import android.app.Application;
+import android.content.Context;
+
 
 import com.facebook.appevents.AppEventsLogger;
 
 public class MyApp extends Application {
+
+
     private String familiaId;
     private String familiaNombre;
     private String categoriaId;

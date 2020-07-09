@@ -106,6 +106,28 @@ public class Perfil extends AppCompatActivity implements BottomNavigationView.On
 
     }
 
+    public void Compartir(View view)
+    {
+        try {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("text/plain");
+            i.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.app_name));
+            String aux = "Descarga la app\n";
+            //aux = aux + "https://play.google.com/store/apps/de..."+getBaseContext().getPackageName();
+            aux = aux + "https://play.google.com/store/apps/details?id=com.fastbuyapp.omar.fastbuy";
+            i.putExtra(Intent.EXTRA_TEXT, aux);
+            startActivity(i);
+        } catch (Exception e) {
+        }
+
+        /*Intent compartir = new Intent(android.content.Intent.ACTION_SEND);
+        compartir.setType("text/plain");
+        String mensaje = "Te recomiendo esta App para encontrar trabajo y obtener descuentos.";
+        compartir.putExtra(android.content.Intent.EXTRA_SUBJECT, "Empleos Baja App");
+        compartir.putExtra(android.content.Intent.EXTRA_TEXT, mensaje);
+        startActivity(Intent.createChooser(compartir, "Compartir vía"));*/
+    }
+
     private  void recuperarPreferenciaUsuario() throws UnsupportedEncodingException {
 
         SharedPreferences preferences = getSharedPreferences("preferenciaUsuario", Context.MODE_PRIVATE);

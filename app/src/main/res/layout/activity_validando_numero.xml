@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:text="Lo usaremos para validar que el numero sea valido y usted sea el propietario de este celular"
+            android:text="Ese Company Te enviara un SMS para verificar tu número de telefono. Seleccione el codigo de tu país y numero de telefono"
             android:textSize="12dp"
             android:textStyle="italic"
             android:textColor="@color/colorTextSecu"/>

@@ -16,4 +16,6 @@
 
     <dimen name="rate_us_star_minheight"> <!--height of your image--> </dimen>
     <dimen name="rate_us_star_maxheight"> <!--height of your image--> </dimen>
+    <dimen name="appbar_padding">16dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
 </resources>

@@ -7,6 +7,15 @@ public class MoCServicio {
     private String Imagen;
     private String Precio;
     private String IdCategoria;
+    private Boolean Favorito;
+
+    public Boolean getFavorito() {
+        return Favorito;
+    }
+
+    public void setFavorito(Boolean favorito) {
+        this.Favorito = favorito;
+    }
 
     public MoCServicio(){};
 
@@ -52,13 +61,14 @@ public class MoCServicio {
         Descripcion = descripcion;
     }
 
-    public MoCServicio(String id, String nombre, String descripcion, String imagen, String precio, String idCategoria) {
+    public MoCServicio(String id, String nombre, String descripcion, String imagen, String precio, String idCategoria, Boolean favorito) {
         Id = id;
         Nombre = nombre;
         Descripcion = descripcion;
         Imagen = imagen;
         Precio = precio;
         IdCategoria = idCategoria;
+        Favorito = favorito;
     }
 
 

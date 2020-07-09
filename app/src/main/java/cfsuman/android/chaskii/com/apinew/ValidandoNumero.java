@@ -178,7 +178,7 @@ public class ValidandoNumero extends AppCompatActivity {
                         //si la respuesta da error, muestra un mensaje del resultado
                         Toast.makeText(getApplicationContext(), json.getString("hubo un error al registrar"), Toast.LENGTH_SHORT).show();
                     } else {
-                        Intent intent = new Intent(getApplicationContext(), Inicio.class);
+                        Intent intent = new Intent(getApplicationContext(), ValidarMensaje.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                     }

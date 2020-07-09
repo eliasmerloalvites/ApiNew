@@ -55,7 +55,7 @@ public class AdaptadorCategoria extends RecyclerView.Adapter<AdaptadorCategoria.
         {
             if (listacategoria.get(position).getId() == listaservicio.get(i).getIdCategoria())
             {
-                holder.listaCategoriaServicio.add(new MoCServicio(listaservicio.get(i).getId(),listaservicio.get(i).getNombre(),listaservicio.get(i).getDescripcion(),listaservicio.get(i).getImagen(),listaservicio.get(i).getPrecio(),listaservicio.get(i).getIdCategoria()));
+                holder.listaCategoriaServicio.add(new MoCServicio(listaservicio.get(i).getId(),listaservicio.get(i).getNombre(),listaservicio.get(i).getDescripcion(),listaservicio.get(i).getImagen(),listaservicio.get(i).getPrecio(),listaservicio.get(i).getIdCategoria(),false));
             }
         }
         holder.adaptadorCategoria = new AdaptadorCServicio(holder.listaCategoriaServicio,context,"categoria");

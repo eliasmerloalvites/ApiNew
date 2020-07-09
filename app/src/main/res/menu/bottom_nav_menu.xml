@@ -7,14 +7,14 @@
     <item
         android:id="@+id/navigation_notificaciones"
         android:icon="@drawable/ic_favorite_true"
-        android:title="@string/title_perfil" />
+        android:title="@string/title_favoritos" />
     <item
         android:id="@+id/navigation_Mensaje"
-        android:icon="@drawable/ic_mensaje"
+        android:icon="@drawable/ic_chat"
         android:title="@string/title_mensaje" />
     <item
         android:id="@+id/navigation_perfil"
-        android:icon="@drawable/ic_menu_person"
+        android:icon="@drawable/ico_usuario"
         android:title="@string/title_perfil" />
 
 </menu>

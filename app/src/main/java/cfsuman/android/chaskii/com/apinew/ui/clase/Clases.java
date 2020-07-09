@@ -3,6 +3,7 @@ package cfsuman.android.chaskii.com.apinew.ui.clase;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,13 +36,12 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import cfsuman.android.chaskii.com.apinew.MyApp;
-import cfsuman.android.chaskii.com.apinew.adaptador.AdaptadorClase;
+import cfsuman.android.chaskii.com.apinew.adaptador.AdaptadorClaServicio;
 import cfsuman.android.chaskii.com.apinew.R;
 import cfsuman.android.chaskii.com.apinew.adaptador.AdaptadorClaseLista;
 import cfsuman.android.chaskii.com.apinew.modelo.MClase;
 import cfsuman.android.chaskii.com.apinew.modelo.MoCServicio;
 import cfsuman.android.chaskii.com.apinew.ui.categoria.ACategoria;
-import cfsuman.android.chaskii.com.apinew.ui.home.Inicio;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -56,9 +56,10 @@ public class Clases extends AppCompatActivity {
     private static String  clasesNombre = "";
     ArrayList<MClase> listaClase;
     ArrayList<MoCServicio> listaSevicio;
-    AdaptadorClase adaptadorClase;
     AdaptadorClaseLista adaptadorClaselista = null;
-    RecyclerView recyclerClase;
+    AdaptadorClaServicio adaptadorClaselista1 = null;
+    RecyclerView recyclerClase,recyclerClaseLista;
+    private GridLayoutManager glm;
     TextView icobuscador,icoCerrarbuscador;
     ImageView icoModoLista;
     EditText edtbuscador;
@@ -77,7 +78,8 @@ public class Clases extends AppCompatActivity {
         listaClase = new ArrayList<>();
         listaSevicio = new ArrayList<>();
         recyclerClase = findViewById(R.id.recicleClase);
-        recyclerClase.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
+        recyclerClaseLista = findViewById(R.id.recicleClase);
+        glm = new GridLayoutManager(this, 3);
         ListarClase();
        // adaptadorClase = (AdaptadorClase) recyclerClase.getAdapter();
         linlay = findViewById(R.id.lilaBuscadorCla);
@@ -178,6 +180,9 @@ public class Clases extends AppCompatActivity {
                 if(adaptadorClaselista != null) {
                     adaptadorClaselista.getFilter().filter(s);
                 }
+                    if(adaptadorClaselista1 != null) {
+                    adaptadorClaselista1.getFilter().filter(s);
+                }
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -247,14 +252,16 @@ public class Clases extends AppCompatActivity {
                         JSONArray array1 = json1.getJSONArray(array0.getJSONObject(it).getString("CLA_Nombre"));
                         for (int i = 0 ; i<array1.length();i++)
                         {
-                            listaSevicio.add(new MoCServicio(array1.getJSONObject(i).getString("SER_Id"),array1.getJSONObject(i).getString("SER_Nombre"),array1.getJSONObject(i).getString("SER_Descripcion"),array1.getJSONObject(i).getString("SER_Imagen"),array1.getJSONObject(i).getString("SER_CostoHora"),array0.getJSONObject(it).getString("CLA_Id")));
+                            listaSevicio.add(new MoCServicio(array1.getJSONObject(i).getString("SER_Id"),array1.getJSONObject(i).getString("SER_Nombre"),array1.getJSONObject(i).getString("SER_Descripcion"),array1.getJSONObject(i).getString("SER_Imagen"),array1.getJSONObject(i).getString("SER_CostoHora"),array0.getJSONObject(it).getString("CLA_Id"),false));
                         }
                     }
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                    adaptadorClase= new AdaptadorClase(listaClase,listaSevicio,getApplicationContext(),edtbuscador);
-                    recyclerClase.setAdapter(adaptadorClase);
+                    //adaptadorClase= new AdaptadorClase(listaClase,listaSevicio,getApplicationContext(),edtbuscador);
+                            recyclerClase.setLayoutManager(glm);
+                    adaptadorClaselista1= new AdaptadorClaServicio(listaSevicio,getApplicationContext(),"clase");
+                    recyclerClase.setAdapter(adaptadorClaselista1);
                         }
                     });
 
@@ -290,6 +297,7 @@ public class Clases extends AppCompatActivity {
                 System.out.println(myresponse);
                 listaClase.clear();
                 listaSevicio.clear();
+
                 try {
                     JSONObject json = new JSONObject(myresponse);
                     JSONObject json1 = json.getJSONObject("success");
@@ -301,14 +309,16 @@ public class Clases extends AppCompatActivity {
                         JSONArray array1 = json1.getJSONArray(array0.getJSONObject(it).getString("CLA_Nombre"));
                         for (int i = 0 ; i<array1.length();i++)
                         {
-                            listaSevicio.add(new MoCServicio(array1.getJSONObject(i).getString("SER_Id"),array1.getJSONObject(i).getString("SER_Nombre"),array1.getJSONObject(i).getString("SER_Descripcion"),array1.getJSONObject(i).getString("SER_Imagen"),array1.getJSONObject(i).getString("SER_CostoHora"),array0.getJSONObject(it).getString("CLA_Id")));
+                            listaSevicio.add(new MoCServicio(array1.getJSONObject(i).getString("SER_Id"),array1.getJSONObject(i).getString("SER_Nombre"),array1.getJSONObject(i).getString("SER_Descripcion"),array1.getJSONObject(i).getString("SER_Imagen"),array1.getJSONObject(i).getString("SER_CostoHora"),array0.getJSONObject(it).getString("CLA_Id"),false));
                         }
                     }
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            recyclerClaseLista.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL,false));
+
                             adaptadorClaselista= new AdaptadorClaseLista(listaClase,listaSevicio,getApplicationContext(),edtbuscador,"clase");
-                            recyclerClase.setAdapter(adaptadorClaselista);
+                            recyclerClaseLista.setAdapter(adaptadorClaselista);
                         }
                     });
 

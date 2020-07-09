@@ -1,5 +1,6 @@
 package cfsuman.android.chaskii.com.apinew.ui.home;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,18 +15,21 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.models.SlideModel;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -33,12 +37,15 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
+import cfsuman.android.chaskii.com.apinew.ui.favorito.Favoritos;
 import cfsuman.android.chaskii.com.apinew.R;
 import cfsuman.android.chaskii.com.apinew.adaptador.AdaptadorFServicio;
 import cfsuman.android.chaskii.com.apinew.modelo.MFamilia;
 import cfsuman.android.chaskii.com.apinew.modelo.MoCServicio;
+import cfsuman.android.chaskii.com.apinew.ui.perfil.Perfil;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -47,8 +54,10 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class Inicio extends AppCompatActivity {
+public class Inicio extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private static final int REQ_CODE_SPEECH_INPUT = 100;
+    private BottomNavigationView navView;
+    List<SlideModel> slideModels;
     ArrayList<MFamilia> listaFamilia;
     ArrayList<MoCServicio> listaSevicio;
     ArrayList<MoCServicio> listaPromocion;
@@ -59,6 +68,7 @@ public class Inicio extends AppCompatActivity {
     String Usuario;
     LinearLayout linlay;
     Byte EstadoBuscado = 0; //0 = escrito y 1 audio
+    ImageSlider imageSlider;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +76,6 @@ public class Inicio extends AppCompatActivity {
 
         SharedPreferences preferences = getSharedPreferences("preferenciaUsuario", Context.MODE_PRIVATE);
         Usuario = preferences.getString("name","");
-
         listaFamilia = new ArrayList<>();
         listaSevicio = new ArrayList<>();
         listaPromocion = new ArrayList<>();
@@ -74,12 +83,28 @@ public class Inicio extends AppCompatActivity {
         recyclerFamilia.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
         adaptadorFamilia = (AdaptadorFServicio) recyclerFamilia.getAdapter();
         ListarCategoria();
+        imageSlider=findViewById(R.id.slider);
         linlay = findViewById(R.id.lilaBuscadorFam);
         icoCerrarbuscador = findViewById(R.id.icoCerrarCat);
         icobuscador = findViewById(R.id.icoBuscadorFam);
         edtbuscador = findViewById(R.id.edtBuscadorFam);
         edtbuscador.setHint("Bienvenido, "+Usuario);
+        navView = findViewById(R.id.nav_viewB); //Instanciamos BotonBar del formulario con nuestra Variable navView
+        navView.setOnNavigationItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) this); //asignamos una funcion a cumplir si se selecciona
+        imageSlider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+            }
+        });
+        //TODO Slider con imagenes y videos
+        /*PosterSlider posterSlider =  findViewById(R.id.poster_slider);
+        List<Poster> posters=new ArrayList<>();
+        //add poster using remote url
+        posters.add(new RemoteImage("https://blog.aulaformativa.com/wp-content/uploads/2016/03/ejemplos-slider-de-imagenes-basados-twitter-bootstrap-SimpleBootstrapCarouselWithTextAndOverlay.jpg"));
+        //add remote video using uri
+        posters.add(new RemoteVideo(Uri.parse("http://subdominio.maprocorp.com/images/videoplayback%20(2).mp4")));
+        posterSlider.setPosters(posters);*/
 
         icobuscador.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -170,7 +195,9 @@ public class Inicio extends AppCompatActivity {
     private void ListarCategoria() {
         SharedPreferences preferences = getSharedPreferences("preferenciaUsuario", Context.MODE_PRIVATE);
         String token = preferences.getString("token","");
+        String idUsuario = preferences.getString("id","");
         RequestBody formBody = new FormBody.Builder() //manda parametros
+                .add("USU_Id", idUsuario )
                 .build();
 
         Request request = new Request.Builder()
@@ -190,32 +217,53 @@ public class Inicio extends AppCompatActivity {
                 String myresponse = response.body().string();
                 System.out.println(myresponse);
                 try {
+
+                    slideModels = new ArrayList<>();
                     JSONObject json = new JSONObject(myresponse);
                     JSONObject json1 = json.getJSONObject("success");
                     JSONArray arraypromo = json.getJSONArray("promocion");
                     if (arraypromo.length()>0)
                     {
-                        listaFamilia.add(new MFamilia("0","Promocion"));
+                       // listaFamilia.add(new MFamilia("0","Promociones"));
                     }
+
                     JSONArray array0 = json1.getJSONArray("familia");
+
                     for (int it = 0 ; it<array0.length();it++)
                     {
                         listaFamilia.add(new MFamilia(array0.getJSONObject(it).getString("FAG_Id"),array0.getJSONObject(it).getString("FAG_Nombre")));
                         JSONArray array1 = json1.getJSONArray(array0.getJSONObject(it).getString("FAG_Id"));
-                        for (int i = 0 ; i<array1.length();i++)
-                        {
-                            listaSevicio.add(new MoCServicio(array1.getJSONObject(i).getString("SER_Id"),array1.getJSONObject(i).getString("SER_Nombre"),array1.getJSONObject(i).getString("SER_Descripcion"),array1.getJSONObject(i).getString("SER_Imagen"),array1.getJSONObject(i).getString("SER_CostoHora"),array0.getJSONObject(it).getString("FAG_Id")));
+                        for (int i = 0 ; i<array1.length();i++) {
+
+                            Integer activador = 0;
+                            JSONArray arrayfavoritos = json1.getJSONArray("Favorito");
+                            for (int j = 0; j < arrayfavoritos.length(); j++) {
+                                String serFav = arrayfavoritos.getJSONObject(j).getString("SER_Id");
+                                String serSer = array1.getJSONObject(i).getString("SER_Id");
+                                if (arrayfavoritos.getJSONObject(j).getString("SER_Id").equals(array1.getJSONObject(i).getString("SER_Id")))
+                                {
+                                    listaSevicio.add(new MoCServicio(array1.getJSONObject(i).getString("SER_Id"), array1.getJSONObject(i).getString("SER_Nombre"), array1.getJSONObject(i).getString("SER_Descripcion"), array1.getJSONObject(i).getString("SER_Imagen"), array1.getJSONObject(i).getString("SER_CostoHora"), array0.getJSONObject(it).getString("FAG_Id"),true));
+                                    activador = 1 ;
+                                }
+                            }
+                            if (activador == 0)
+                            {
+                                listaSevicio.add(new MoCServicio(array1.getJSONObject(i).getString("SER_Id"), array1.getJSONObject(i).getString("SER_Nombre"), array1.getJSONObject(i).getString("SER_Descripcion"), array1.getJSONObject(i).getString("SER_Imagen"), array1.getJSONObject(i).getString("SER_CostoHora"), array0.getJSONObject(it).getString("FAG_Id"),false));
+                            }
                         }
                     }
 
 
                     for (int i = 0 ; i<arraypromo.length();i++)
                     {
-                        listaSevicio.add(new MoCServicio(arraypromo.getJSONObject(i).getString("SER_Id"),arraypromo.getJSONObject(i).getString("SER_Nombre"),arraypromo.getJSONObject(i).getString("SER_Descripcion"),arraypromo.getJSONObject(i).getString("SER_Imagen"),arraypromo.getJSONObject(i).getString("SER_CostoHora"),"0"));
+                       // listaSevicio.add(new MoCServicio(arraypromo.getJSONObject(i).getString("SER_Id"),arraypromo.getJSONObject(i).getString("SER_Nombre"),arraypromo.getJSONObject(i).getString("SER_Descripcion"),arraypromo.getJSONObject(i).getString("SER_Imagen"),arraypromo.getJSONObject(i).getString("SER_CostoHora"),"0",false));
+
+                        slideModels.add(new SlideModel("http://subdominio.maprocorp.com/images/servicio/" + arraypromo.getJSONObject(i).getString("SER_Imagen")));
                     }
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            imageSlider .setImageList(slideModels,true);
                     adaptadorFamilia= new AdaptadorFServicio(listaFamilia,listaSevicio,getApplicationContext(),edtbuscador);
                     recyclerFamilia.setAdapter(adaptadorFamilia);
                         }
@@ -228,5 +276,28 @@ public class Inicio extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
 
+        if (id == R.id.navigation_Inicio) {
+            Intent intent = new Intent(this, Inicio.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        else if (id == R.id.navigation_notificaciones) {
+            Intent intent = new Intent(this, Favoritos.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        else if (id == R.id.navigation_Mensaje) {
+
+        }
+        else if (id == R.id.navigation_perfil) {
+            Intent intent = new Intent(this, Perfil.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        return true;
+    }
 }
