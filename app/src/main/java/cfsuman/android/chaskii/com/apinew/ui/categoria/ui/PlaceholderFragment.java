@@ -21,11 +21,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,10 +44,16 @@ import java.util.Locale;
 
 import cfsuman.android.chaskii.com.apinew.MyApp;
 import cfsuman.android.chaskii.com.apinew.R;
+import cfsuman.android.chaskii.com.apinew.WrapContentLinearLayoutManager;
 import cfsuman.android.chaskii.com.apinew.adaptador.AdaptadorCategoria;
 import cfsuman.android.chaskii.com.apinew.adaptador.AdaptadorCategoriaLista;
+import cfsuman.android.chaskii.com.apinew.modelo.MAdicionales;
 import cfsuman.android.chaskii.com.apinew.modelo.MCategoria;
+import cfsuman.android.chaskii.com.apinew.modelo.MoCAdicionales;
 import cfsuman.android.chaskii.com.apinew.modelo.MoCServicio;
+import cfsuman.android.chaskii.com.apinew.modelo.MoNovedades;
+import cfsuman.android.chaskii.com.apinew.modelo.MoPromocion;
+import cfsuman.android.chaskii.com.apinew.ui.categoria.ACategoria;
 import cfsuman.android.chaskii.com.apinew.ui.home.Inicio;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -69,14 +78,17 @@ public class PlaceholderFragment extends Fragment {
     private static final int REQ_CODE_SPEECH_INPUT = 101;
     private static String  categorias = "";
     private static String  categoriasNombre = "";
+    ArrayList<MAdicionales> listaAdicional;
+    ArrayList<MoCAdicionales> listaCAdicional;
     ArrayList<MCategoria> listaCategoria;
     ArrayList<MoCServicio> listaSevicio;
+    ArrayList<MoNovedades> listaNovedades;
     private static AdaptadorCategoria adaptadorCategoria = null;
     private static AdaptadorCategoriaLista adaptadorCategorialista = null;
     RecyclerView recyclerCategoria;
     TextView icobuscador,icoCerrarbuscador;
-    ImageView icoModoLista;
-    EditText edtbuscador;
+    Integer rango,rangolista;
+    private static EditText edtbuscador;
     LinearLayout linlay;
     Byte EstadoBuscado = 0,EstadoCerrar = 0, EstadoLista = 0; //0 = escrito y 1 audio
     MyApp varGlobal;
@@ -91,47 +103,64 @@ public class PlaceholderFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        varGlobal = (MyApp) getApplicationContext();
         pageViewModel = ViewModelProviders.of(this).get(PageViewModel.class);
         int index = 1;
         if (getArguments() != null) {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
         }
-        pageViewModel.setIndex(index);
+        pageViewModel.setIndex(index,getApplicationContext());
     }
+
+
 
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_categoria, container, false);
-       // final TextView textView = root.findViewById(R.id.section_label);
+        edtbuscador = getActivity().findViewById(R.id.edtBuscadorCat);
         varGlobal = (MyApp) getApplicationContext();
         pageViewModel.getText().observe(getActivity(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
+
                 varGlobal.setFamiliaId(String.valueOf(s));
-              //  textView.setText(String.valueOf(s));
             }
         });
 
         categorias = varGlobal.getFamiliaId();
         categoriasNombre = varGlobal.getFamiliaNombre();
-
         recyclerCategoria = root.findViewById(R.id.recicleCategoriafragment);
+        listaAdicional = new ArrayList<>();
+        listaCAdicional = new ArrayList<>();
         listaCategoria = new ArrayList<>();
+        listaNovedades = new ArrayList<>();
         listaSevicio = new ArrayList<>();
         recyclerCategoria = root.findViewById(R.id.recicleCategoriafragment);
-        recyclerCategoria.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL,false));
+        recyclerCategoria.setLayoutManager(new WrapContentLinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL,false));
         adaptadorCategoria = (AdaptadorCategoria) recyclerCategoria.getAdapter();
         linlay = getActivity().findViewById(R.id.lilaBuscadorCat);
         icoCerrarbuscador = getActivity().findViewById(R.id.icoAtrasCat);
         icobuscador = getActivity().findViewById(R.id.icoBuscadorCat);
-        icoModoLista = getActivity().findViewById(R.id.modoListaCategoria);
-        edtbuscador = getActivity().findViewById(R.id.edtBuscadorCat);
-        edtbuscador.setHint(categoriasNombre);
-        ListarCategoria();
+        if (varGlobal.getModovista() == 0)
+        {
+            ListarCategoria();
+        }
+        else
+        {
+            ListarCategoria1();
+        }
+
+
         icobuscador.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -139,7 +168,7 @@ public class PlaceholderFragment extends Fragment {
                 if (EstadoBuscado == 0 ) {
                     habilitarEditText(edtbuscador);
                     linlay.setBackgroundResource(R.drawable.formato_buscador);
-                    edtbuscador.setHint("Buscar ...");
+
                     edtbuscador.setTypeface(Typeface.DEFAULT);
                     edtbuscador.setHintTextColor(getActivity().getColor(R.color.colorTextSecu));
                     habilitarEditText(edtbuscador);
@@ -177,7 +206,7 @@ public class PlaceholderFragment extends Fragment {
                 if(EstadoCerrar == 1) {
                     linlay.setBackgroundResource(R.drawable.formato_buscador_transparente);
                     edtbuscador.setText("");
-                    edtbuscador.setHint(categoriasNombre);
+
                     edtbuscador.setTypeface(Typeface.DEFAULT_BOLD);
                     edtbuscador.setHintTextColor(getActivity().getColor(R.color.edtColorWhite));
                     disableEditText(edtbuscador);
@@ -196,23 +225,6 @@ public class PlaceholderFragment extends Fragment {
                     Intent intent = new Intent(getApplicationContext(),Inicio.class);
                     startActivity(intent);
                     getActivity().finish();
-                }
-            }
-        });
-        icoModoLista.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (EstadoLista == 0 ) {
-
-                    icoModoLista.setImageResource(R.drawable.ic_menu_cuadro);
-                    EstadoLista = 1;
-                    ListarCategoria1();
-                }
-                else
-                {
-                    icoModoLista.setImageResource(R.drawable.ic_menu_black_24dp);
-                    EstadoLista = 0;
-                    ListarCategoria();
                 }
             }
         });
@@ -247,6 +259,7 @@ public class PlaceholderFragment extends Fragment {
             }
         }
     }
+
     private void habilitarEditText(EditText editText) {
         editText.setFocusable(true);
         editText.setEnabled(true);
@@ -280,25 +293,40 @@ public class PlaceholderFragment extends Fragment {
                 String myresponse = response.body().string();
                 System.out.println(myresponse);
                 try {
+                    listaAdicional.clear();
+                    listaCAdicional.clear();
                     listaCategoria.clear();
                     listaSevicio.clear();
                     JSONObject json = new JSONObject(myresponse);
-                    JSONObject json1 = json.getJSONObject("success");
+                    final JSONObject json1 = json.getJSONObject("success");
+                    final JSONObject json2 = json.getJSONObject("adicional");
 
+                    JSONObject objectNombres = json2.getJSONObject("Nombres");
+                    for (int it = 1 ; it<=objectNombres.length();it++)
+                    {
+                        listaAdicional.add(new MAdicionales(String.valueOf(it),objectNombres.getString(String.valueOf(it)),""));
+                        JSONArray arrayAdicionales = json2.getJSONArray(objectNombres.getString(String.valueOf(it)));
+                        for (int i = 0 ; i<arrayAdicionales.length();i++)
+                        {
+                            listaCAdicional.add(new MoCAdicionales(arrayAdicionales.getJSONObject(i).getString("SER_Id"),arrayAdicionales.getJSONObject(i).getString("SER_Nombre"),arrayAdicionales.getJSONObject(i).getString("SER_Descripcion"),arrayAdicionales.getJSONObject(i).getString("SER_Imagen"),arrayAdicionales.getJSONObject(i).getString("SER_CostoHora"),String.valueOf(it),false));
+                        }
+                    }
+                    rango = Integer.valueOf(json1.getString("rango"));
                     JSONArray array0 = json1.getJSONArray("categoria");
                     for (int it = 0 ; it<array0.length();it++)
                     {
-                        listaCategoria.add(new MCategoria(array0.getJSONObject(it).getString("CAT_Id"),array0.getJSONObject(it).getString("CAT_Nombre"),""));
+                        listaCategoria.add(new MCategoria(array0.getJSONObject(it).getString("CAT_Id"),array0.getJSONObject(it).getString("CAT_Nombre"),"","",""));
                         JSONArray array1 = json1.getJSONArray(array0.getJSONObject(it).getString("CAT_Nombre"));
                         for (int i = 0 ; i<array1.length();i++)
                         {
                             listaSevicio.add(new MoCServicio(array1.getJSONObject(i).getString("SER_Id"),array1.getJSONObject(i).getString("SER_Nombre"),array1.getJSONObject(i).getString("SER_Descripcion"),array1.getJSONObject(i).getString("SER_Imagen"),array1.getJSONObject(i).getString("SER_CostoHora"),array0.getJSONObject(it).getString("CAT_Id"),false));
                         }
                     }
+
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            adaptadorCategoria = new AdaptadorCategoria(listaCategoria, listaSevicio, getApplicationContext(), edtbuscador);
+                            adaptadorCategoria = new AdaptadorCategoria(listaCategoria, listaSevicio,listaAdicional, listaCAdicional, getApplicationContext(),rango,edtbuscador,getActivity());
                             recyclerCategoria.setAdapter(adaptadorCategoria);
                         }
                     });
@@ -334,15 +362,32 @@ public class PlaceholderFragment extends Fragment {
                 String myresponse = response.body().string();
                 System.out.println(myresponse);
                 try {
+                    listaAdicional.clear();
+                    listaCAdicional.clear();
                     listaCategoria.clear();
                     listaSevicio.clear();
                     JSONObject json = new JSONObject(myresponse);
                     JSONObject json1 = json.getJSONObject("success");
+                    final JSONObject json2 = json.getJSONObject("adicional");
+
+                    JSONObject objectNombres = json2.getJSONObject("Nombres");
+                    for (int it = 1 ; it<=objectNombres.length();it++)
+                    {
+                        listaAdicional.add(new MAdicionales(String.valueOf(it),objectNombres.getString(String.valueOf(it)),""));
+                        JSONArray arrayAdicionales = json2.getJSONArray(objectNombres.getString(String.valueOf(it)));
+                        for (int i = 0 ; i<arrayAdicionales.length();i++)
+                        {
+                            listaCAdicional.add(new MoCAdicionales(arrayAdicionales.getJSONObject(i).getString("SER_Id"),arrayAdicionales.getJSONObject(i).getString("SER_Nombre"),arrayAdicionales.getJSONObject(i).getString("SER_Descripcion"),arrayAdicionales.getJSONObject(i).getString("SER_Imagen"),arrayAdicionales.getJSONObject(i).getString("SER_CostoHora"),String.valueOf(it),false));
+                        }
+                    }
+                    rango = Integer.valueOf(json1.getString("rango"));
+                    rangolista = Integer.valueOf(json1.getString("rangolista"));
+
 
                     JSONArray array0 = json1.getJSONArray("categoria");
                     for (int it = 0 ; it<array0.length();it++)
                     {
-                        listaCategoria.add(new MCategoria(array0.getJSONObject(it).getString("CAT_Id"),array0.getJSONObject(it).getString("CAT_Nombre"),""));
+                        listaCategoria.add(new MCategoria(array0.getJSONObject(it).getString("CAT_Id"),array0.getJSONObject(it).getString("CAT_Nombre"),array0.getJSONObject(it).getString("CAT_Descripcion"),array0.getJSONObject(it).getString("CostoMin"),array0.getJSONObject(it).getString("CostoMax")));
                         JSONArray array1 = json1.getJSONArray(array0.getJSONObject(it).getString("CAT_Nombre"));
                         for (int i = 0 ; i<array1.length();i++)
                         {
@@ -353,7 +398,7 @@ public class PlaceholderFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            adaptadorCategorialista= new AdaptadorCategoriaLista(listaCategoria,listaSevicio,getApplicationContext(),"caetegoria");
+                            adaptadorCategorialista= new AdaptadorCategoriaLista(listaCategoria,listaSevicio,listaAdicional, listaCAdicional,getApplicationContext(),"caetegoria",rangolista,getActivity());
                             recyclerCategoria.setAdapter(adaptadorCategorialista);
                         }
                     });

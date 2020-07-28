@@ -2,17 +2,21 @@
 <resources>
     <color name="colorPrimary">#1bbbbb</color>
     <color name="colorPrimaryDark">#17A1A1</color>
+    <color name="colorSecundario">#FFAAA5</color>
+    <color name="colorSecundarioDark">#FE7C72</color>
     <color name="colorAccent">#FFFFFF</color>
     <color name="colorLightPrimaryColor">#DCEDC8</color>
     <color name="colorTextIcon">#FFFFFF</color>
     <color name="colorTextPrimary">#212121</color>
-    <color name="colorTextSecu">#8F8F8F</color>
+    <color name="colorTextSecu">#707070</color>
     <color name="edtColorWhite">#FFFFFF</color>
     <color name="edtColorBlack">#000000</color>
     <color name="backgroundtext_Card">#01BBD6</color>
     <color name="edtAmarillo">#FFC800</color>
     <color name="edtAmarilloSec">#FFD640</color>
     <color name="plomo">#F0F0F0</color>
+    <color name="verde">#24D436</color>
+    <color name="colortransparente">#CCCCCC</color>
 
     <color name="colorbottonbar">#1BBBBB</color>
 </resources>

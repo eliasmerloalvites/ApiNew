@@ -19,16 +19,17 @@
         <CheckBox
             android:layout_weight="0.2"
             android:id="@+id/chkItem"
-            android:textSize="11dp"
+            android:textSize="12dp"
             android:textColor="@color/colorTextSecu"
             android:visibility="visible"
-            android:buttonTint="@color/colorPrimaryDark"
+            android:buttonTint="@color/edtAmarillo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/txtprecio"
             android:layout_weight="0.8"
-            android:textSize="11dp"
+            android:background="#00000000"
+            android:textSize="12dp"
             android:textAlignment="textEnd"
             android:textColor="@color/colorTextSecu"
             android:layout_width="match_parent"

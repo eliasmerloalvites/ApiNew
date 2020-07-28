@@ -88,7 +88,7 @@ public class AdaptadorCServicio extends  RecyclerView.Adapter<AdaptadorCServicio
     @Override
     public void onBindViewHolder(@NonNull ViewHolderfamiliaes holder,final int i) {
 
-        final int radius = 10;
+        final int radius = 35;
         final int margin = 0;
         final Transformation transformation = new RoundedCornersTransformation(radius,margin, RoundedCornersTransformation.CornerType.TOP);
 
@@ -98,8 +98,6 @@ public class AdaptadorCServicio extends  RecyclerView.Adapter<AdaptadorCServicio
             holder.precioahora.setText("S/ "+listaservicio.get(i).getPrecio());
             Picasso.get()
                     .load(Uri.parse("http://subdominio.maprocorp.com/images/servicio/"+listaservicio.get(i).getImagen()))
-                    .resize(140, 85)
-                    .centerCrop()
                     .transform(transformation)
                     .error(R.drawable.apple_logo) //en caso que la url no sea válida muestro otra imagen
                     .into(holder.imagen);

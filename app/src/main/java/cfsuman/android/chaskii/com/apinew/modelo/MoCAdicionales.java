@@ -1,39 +1,27 @@
 package cfsuman.android.chaskii.com.apinew.modelo;
 
-public class MoPromocion {
+public class MoCAdicionales {
     private String Id;
     private String Nombre;
     private String Descripcion;
     private String Imagen;
     private String Precio;
-    private String Formato;
-    private String Tiempo;
+    private String IdCategoria;
+    private Boolean Favorito;
 
-    public String getFormato() {
-        return Formato;
+    public Boolean getFavorito() {
+        return Favorito;
     }
 
-    public void setFormato(String formato) {
-        Formato = formato;
+    public void setFavorito(Boolean favorito) {
+        this.Favorito = favorito;
     }
 
-    public String getTiempo() {
-        return Tiempo;
-    }
+    public MoCAdicionales(){};
 
-    public void setTiempo(String tiempo) {
-        Tiempo = tiempo;
-    }
+    public String getIdCategoria() { return IdCategoria; }
 
-    private String Proveedor;
-
-    public String getProveedor() {
-        return Proveedor;
-    }
-
-    public void setProveedor(String proveedor) {
-        Proveedor = proveedor;
-    }
+    public void setIdCategoria(String idCategoria) {IdCategoria = idCategoria; }
 
     public String getPrecio() { return Precio; }
 
@@ -46,6 +34,8 @@ public class MoPromocion {
     public void setImagen(String imagen) {
         Imagen = imagen;
     }
+
+
 
     public String getId() {
         return Id;
@@ -71,17 +61,15 @@ public class MoPromocion {
         Descripcion = descripcion;
     }
 
-    public MoPromocion(String id, String nombre, String descripcion, String imagen, String precio, String formato, String tiempo, String proveedor) {
+    public MoCAdicionales(String id, String nombre, String descripcion, String imagen, String precio, String idCategoria, Boolean favorito) {
         Id = id;
         Nombre = nombre;
         Descripcion = descripcion;
         Imagen = imagen;
         Precio = precio;
-        Formato = formato;
-        Tiempo = tiempo;
-        Proveedor = proveedor;
+        IdCategoria = idCategoria;
+        Favorito = favorito;
     }
 
-    public MoPromocion() {
-    }
+
 }

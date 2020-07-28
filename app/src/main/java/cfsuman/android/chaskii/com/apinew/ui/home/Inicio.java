@@ -5,7 +5,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -18,17 +21,20 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.speech.RecognizerIntent;
+import android.text.Editable;
+import android.text.Html;
+import android.text.TextWatcher;
+import android.transition.Slide;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
-import com.denzcoskun.imageslider.ImageSlider;
-import com.denzcoskun.imageslider.models.SlideModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
@@ -40,6 +46,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import cfsuman.android.chaskii.com.apinew.MyApp;
+import cfsuman.android.chaskii.com.apinew.WrapContentLinearLayoutManager;
+import cfsuman.android.chaskii.com.apinew.adaptador.AdaptadorFamiliaSlider;
+import cfsuman.android.chaskii.com.apinew.adaptador.SliderAdapterPromocion;
+import cfsuman.android.chaskii.com.apinew.modelo.MoPromocion;
 import cfsuman.android.chaskii.com.apinew.ui.favorito.Favoritos;
 import cfsuman.android.chaskii.com.apinew.R;
 import cfsuman.android.chaskii.com.apinew.adaptador.AdaptadorFServicio;
@@ -57,18 +68,19 @@ import okhttp3.Response;
 public class Inicio extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     private BottomNavigationView navView;
-    List<SlideModel> slideModels;
+
     ArrayList<MFamilia> listaFamilia;
     ArrayList<MoCServicio> listaSevicio;
-    ArrayList<MoCServicio> listaPromocion;
+    ArrayList<MoPromocion> listaPromocion;
     AdaptadorFServicio adaptadorFamilia;
+    AdaptadorFamiliaSlider adaptadorFamiliaSlider;
     RecyclerView recyclerFamilia;
     TextView icobuscador,icoCerrarbuscador;
     EditText edtbuscador;
     String Usuario;
     LinearLayout linlay;
     Byte EstadoBuscado = 0; //0 = escrito y 1 audio
-    ImageSlider imageSlider;
+    private MyApp varGlobal;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,11 +91,15 @@ public class Inicio extends AppCompatActivity implements BottomNavigationView.On
         listaFamilia = new ArrayList<>();
         listaSevicio = new ArrayList<>();
         listaPromocion = new ArrayList<>();
+        varGlobal = (MyApp) getApplicationContext();
+        varGlobal.setModovista(0);
         recyclerFamilia = findViewById(R.id.recicleFamilia);
-        recyclerFamilia.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
+        recyclerFamilia.setLayoutManager(new WrapContentLinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
         adaptadorFamilia = (AdaptadorFServicio) recyclerFamilia.getAdapter();
+        adaptadorFamiliaSlider = (AdaptadorFamiliaSlider) recyclerFamilia.getAdapter();
+        SnapHelper snapHelperDias = new LinearSnapHelper();
+        snapHelperDias.attachToRecyclerView(recyclerFamilia);
         ListarCategoria();
-        imageSlider=findViewById(R.id.slider);
         linlay = findViewById(R.id.lilaBuscadorFam);
         icoCerrarbuscador = findViewById(R.id.icoCerrarCat);
         icobuscador = findViewById(R.id.icoBuscadorFam);
@@ -91,12 +107,7 @@ public class Inicio extends AppCompatActivity implements BottomNavigationView.On
         edtbuscador.setHint("Bienvenido, "+Usuario);
         navView = findViewById(R.id.nav_viewB); //Instanciamos BotonBar del formulario con nuestra Variable navView
         navView.setOnNavigationItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) this); //asignamos una funcion a cumplir si se selecciona
-        imageSlider.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
         //TODO Slider con imagenes y videos
         /*PosterSlider posterSlider =  findViewById(R.id.poster_slider);
         List<Poster> posters=new ArrayList<>();
@@ -164,8 +175,17 @@ public class Inicio extends AppCompatActivity implements BottomNavigationView.On
                 imm.hideSoftInputFromWindow(icobuscador.getWindowToken(), 0);
             }
         });
-
+        edtbuscador.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                if(adaptadorFamilia != null) {
+                    adaptadorFamilia.getFilter().filter(s);
+                }
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -204,7 +224,6 @@ public class Inicio extends AppCompatActivity implements BottomNavigationView.On
                 .url("http://subdominio.maprocorp.com/api/listaFamilia")  //url
                 .post(formBody)
                 .addHeader("Authorization", "Bearer " + token)
-                //.post(formBody)       //parametros
                 .build();
         OkHttpClient client = new OkHttpClient();   //ok
         client.newCall(request).enqueue(new Callback() {
@@ -217,16 +236,9 @@ public class Inicio extends AppCompatActivity implements BottomNavigationView.On
                 String myresponse = response.body().string();
                 System.out.println(myresponse);
                 try {
-
-                    slideModels = new ArrayList<>();
                     JSONObject json = new JSONObject(myresponse);
                     JSONObject json1 = json.getJSONObject("success");
                     JSONArray arraypromo = json.getJSONArray("promocion");
-                    if (arraypromo.length()>0)
-                    {
-                       // listaFamilia.add(new MFamilia("0","Promociones"));
-                    }
-
                     JSONArray array0 = json1.getJSONArray("familia");
 
                     for (int it = 0 ; it<array0.length();it++)
@@ -252,23 +264,18 @@ public class Inicio extends AppCompatActivity implements BottomNavigationView.On
                             }
                         }
                     }
-
-
                     for (int i = 0 ; i<arraypromo.length();i++)
                     {
-                       // listaSevicio.add(new MoCServicio(arraypromo.getJSONObject(i).getString("SER_Id"),arraypromo.getJSONObject(i).getString("SER_Nombre"),arraypromo.getJSONObject(i).getString("SER_Descripcion"),arraypromo.getJSONObject(i).getString("SER_Imagen"),arraypromo.getJSONObject(i).getString("SER_CostoHora"),"0",false));
-
-                        slideModels.add(new SlideModel("http://subdominio.maprocorp.com/images/servicio/" + arraypromo.getJSONObject(i).getString("SER_Imagen")));
-                    }
+                        listaPromocion.add(new MoPromocion(arraypromo.getJSONObject(i).getString("PROM_Id"),arraypromo.getJSONObject(i).getString("PROM_Nombre"),arraypromo.getJSONObject(i).getString("PROM_Descripcion"),arraypromo.getJSONObject(i).getString("PROM_Imagen"),arraypromo.getJSONObject(i).getString("PROM_CostoHora"),"","",""));
+                     }
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            imageSlider .setImageList(slideModels,true);
-                    adaptadorFamilia= new AdaptadorFServicio(listaFamilia,listaSevicio,getApplicationContext(),edtbuscador);
-                    recyclerFamilia.setAdapter(adaptadorFamilia);
+
+                            adaptadorFamilia= new AdaptadorFServicio(listaFamilia,listaSevicio,listaPromocion,getApplicationContext(),edtbuscador,recyclerFamilia);
+                            recyclerFamilia.setAdapter(adaptadorFamilia);
                         }
                     });
-
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -281,13 +288,12 @@ public class Inicio extends AppCompatActivity implements BottomNavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.navigation_Inicio) {
-            Intent intent = new Intent(this, Inicio.class);
+            /*Intent intent = new Intent(this, Inicio.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            startActivity(intent);*/
         }
         else if (id == R.id.navigation_notificaciones) {
             Intent intent = new Intent(this, Favoritos.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
         else if (id == R.id.navigation_Mensaje) {
@@ -295,9 +301,9 @@ public class Inicio extends AppCompatActivity implements BottomNavigationView.On
         }
         else if (id == R.id.navigation_perfil) {
             Intent intent = new Intent(this, Perfil.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
         return true;
     }
+
 }

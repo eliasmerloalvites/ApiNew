@@ -16,30 +16,31 @@
                 android:background="@color/colorPrimary"
                 android:gravity="center"
                 android:orientation="horizontal" >
+                <TextView
+                    android:id="@+id/icoAtrasCat"
+                    android:layout_width="40dp"
+                    android:layout_height="120dp"
+                    android:text=""
+                    android:drawableEnd="@drawable/ic_atras"
+                    android:drawableTint="#FFF" />
                 <LinearLayout
                     android:id="@+id/lilaBuscadorCat"
                     android:layout_width="match_parent"
+                    android:background="@drawable/formato_buscador"
                     android:layout_height="40dp"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/icoAtrasCat"
-                        android:layout_width="40dp"
-                        android:layout_height="120dp"
-                        android:text=""
-                        android:drawableEnd="@drawable/ic_atras"
-                        android:drawableTint="#FFF" />
                     <EditText
                         android:id="@+id/edtBuscadorCat"
                         android:paddingLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:textColorHint="#fff"
+                        android:hint="¿Qué deseas buscar hoy"
+                        android:textColorHint="@color/colorTextSecu"
                         android:textSize="16sp"
-                        android:textStyle="bold"
                         android:layout_weight="1"
                         android:background="@null" />
                     <TextView
@@ -47,8 +48,8 @@
                         android:layout_width="40dp"
                         android:layout_height="120dp"
                         android:text=""
-                        android:drawableEnd="@drawable/ic_search"
-                        android:drawableTint="#FFF" />
+                        android:drawableEnd="@drawable/ic_micro"
+                        android:drawableTint="@color/colorPrimaryDark" />
                 </LinearLayout>
                 <ImageView
                     android:id="@+id/modoListaCategoria"
@@ -63,8 +64,10 @@
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:tabIndicatorColor="@color/colorPrimaryDark"
-                android:background="@color/plomo" />
+                app:tabTextColor="#fff"
+                app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+                app:tabIndicatorColor="@color/edtColorWhite"
+                app:tabBackground="@drawable/tabbackground" />
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"

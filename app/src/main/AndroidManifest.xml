@@ -12,15 +12,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Promocion"
+            android:theme="@style/AppThemeTransparente"></activity>
         <activity android:name=".ui.favorito.Favoritos" />
-        <activity android:name=".ValidarMensaje"></activity>
+        <activity android:name=".ValidarMensaje" />
         <activity android:name=".DetalleServicio" />
         <activity android:name=".ui.home.Inicio">
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".ui.categoria.ACategoria" />
         <activity android:name=".ValidandoNumero" />
@@ -28,10 +30,7 @@
         <activity android:name=".Validacion" />
         <activity android:name=".ui.clase.Clases" />
         <activity android:name=".terminos" />
-        <activity android:name=".Presentacion">
-
-
-        </activity>
+        <activity android:name=".Presentacion"></activity>
         <activity
             android:name=".MenuPrincipal"
             android:label="@string/title_activity_menu_principal"
@@ -47,13 +46,13 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-
     <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

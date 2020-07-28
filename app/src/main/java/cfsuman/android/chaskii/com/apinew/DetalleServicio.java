@@ -77,8 +77,8 @@ public class DetalleServicio extends AppCompatActivity {
         adaptadorDetallesTarea = (AdaptadorDetallesTarea) recyclerCategoria.getAdapter();
 
         imagen = findViewById(R.id.imgServicio);
-        txtdescripcion = findViewById(R.id.descripcionservicio);
-        txttotal = findViewById(R.id.txtTotal);
+            txtdescripcion = findViewById(R.id.descripcionservicio);
+            txttotal = findViewById(R.id.txtTotal);
         icoCerrarbuscador = findViewById(R.id.icoAtrasSer);
         edtbuscador = findViewById(R.id.edtBuscadorSer);
         ListarClase();
@@ -141,7 +141,7 @@ public class DetalleServicio extends AppCompatActivity {
                     JSONArray arrayca = json1.getJSONArray("categoria");
                     for (int it = 0 ; it<arrayca.length();it++)
                     {
-                        listaCategoria.add(new MCategoria(arrayca.getJSONObject(it).getString("CAT_Id"),"Sugerencias",""));
+                        listaCategoria.add(new MCategoria(arrayca.getJSONObject(it).getString("CAT_Id"),"Sugerencias","","",""));
                         JSONArray array1 = json1.getJSONArray(arrayca.getJSONObject(it).getString("CAT_Nombre"));
                         for (int i = 0 ; i<array1.length();i++)
                         {

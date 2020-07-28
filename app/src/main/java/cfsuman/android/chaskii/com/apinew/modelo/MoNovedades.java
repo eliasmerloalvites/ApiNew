@@ -1,6 +1,6 @@
 package cfsuman.android.chaskii.com.apinew.modelo;
 
-public class MoPromocion {
+public class MoNovedades {
     private String Id;
     private String Nombre;
     private String Descripcion;
@@ -71,7 +71,7 @@ public class MoPromocion {
         Descripcion = descripcion;
     }
 
-    public MoPromocion(String id, String nombre, String descripcion, String imagen, String precio, String formato, String tiempo, String proveedor) {
+    public MoNovedades(String id, String nombre, String descripcion, String imagen, String precio, String formato, String tiempo, String proveedor) {
         Id = id;
         Nombre = nombre;
         Descripcion = descripcion;
@@ -82,6 +82,6 @@ public class MoPromocion {
         Proveedor = proveedor;
     }
 
-    public MoPromocion() {
+    public MoNovedades() {
     }
 }

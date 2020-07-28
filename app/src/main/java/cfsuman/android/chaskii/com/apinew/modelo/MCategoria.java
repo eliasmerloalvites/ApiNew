@@ -4,6 +4,32 @@ public class MCategoria {
     private String Id;
     private String Nombre;
     private String Descripcion;
+    private String CostoMin;
+    private String CostoMax;
+
+    public String getCostoMin() {
+        return CostoMin;
+    }
+
+    public void setCostoMin(String costoMin) {
+        CostoMin = costoMin;
+    }
+
+    public MCategoria(String id, String nombre, String descripcion, String costoMin, String costoMax) {
+        Id = id;
+        Nombre = nombre;
+        Descripcion = descripcion;
+        CostoMin = costoMin;
+        CostoMax = costoMax;
+    }
+
+    public String getCostoMax() {
+        return CostoMax;
+    }
+
+    public void setCostoMax(String costoMax) {
+        CostoMax = costoMax;
+    }
 
     public MCategoria(){};
 
@@ -28,12 +54,6 @@ public class MCategoria {
     }
 
     public void setDescripcion(String descripcion) {
-        Descripcion = descripcion;
-    }
-
-    public MCategoria(String id, String nombre, String descripcion) {
-        Id = id;
-        Nombre = nombre;
         Descripcion = descripcion;
     }
 
